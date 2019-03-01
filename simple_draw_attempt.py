@@ -20,17 +20,24 @@ while(running):
     
     print(camera.z)
     
+    
+    # with quad Ry change, x,z (quad) is changed, 
+    
     for quad in quads:
 
 #       https://youtu.be/g4E9iq0BixA?t=107
+#       https://www.siggraph.org/education/materials/HyperGraph/modeling/mod_tran/3drota.htm
 
         x = quad.x
         y = quad.y
         z = quad.z
 
-        x-=camera.x; y-=camera.y; z-=camera.z
+        x-=camera.x; y-=camera.y; z-=camera.z # instance quad pt, is copied because changes dont need to be made to original
 
-        f = 200/z
+        f = 200/z # scale to transfer z_quad pt to x,y screen
+        
+        
+        
 
         x1 = (x-(quad.width/2)) * f
         y1 = (y-(quad.height/2)) * f
