@@ -1,8 +1,12 @@
 #First of all, initialize the depth of each pixel.
-i.e,  d(i, j) = infinite (max length)
-Initialize the color value for each pixel 
+#i.e,  
+d(i, j) = infinite (max length)
+
+pixel = []
+
+#Initialize the color value for each pixel 
 as c(i, j) = background color
-for each polygon, do the following steps :
+#for each polygon, do the following steps :
 
 for (each pixel in polygon's projection)
 {
