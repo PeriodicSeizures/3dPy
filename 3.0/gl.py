@@ -3,7 +3,12 @@ import math
 
 pi = math.pi
 
-class gl_engine:
+# renderer
+#   is the gameplay screen
+#   will get a list of objects to render
+#   caption: fps
+#   
+class renderer:
     def __init__(self, w, h):
         self.objects = []
         self.size = [w,h]
@@ -53,14 +58,18 @@ class gl_engine:
 ##            self.objects.append(i)
 
 
+# object contains a list of tri
 class object:
     def __init__(self, tris):
         self.tris = tris
 
+# tri is the basic shape
+# has 3 verts
 class tri:
     def __init__(self, verts):
         self.verts = verts
 
+# world navigator
 class camera:
     def __init__(self):
         self.x = 0; self.y = 0; self.z = 0
@@ -69,7 +78,12 @@ class camera:
         if event.type == pygame.MOUSEMOTION:
             x,y = event.rel; x/=200; y/=200
             self.rx-=y; self.ry+=x
-        self.rx = max(min(self.rx, pi/2), -pi/2)
+            
+        # clamp rx rotation [-pi/2,pi/2]
+        self.rx = clamp(self.rx, -pi/2, pi/2)
+        
+        #self.rx = max(min(self.rx, pi/2), -pi/2)
+        
     def move(self, delta, key):
         speed = delta * 5
 
@@ -82,3 +96,6 @@ class camera:
         
         if key[pygame.K_SPACE]: self.y+=speed
         if key[pygame.K_LSHIFT]: self.y-=speed
+            
+def clamp(num, small, big):
+    return max(min(num, big), small)
