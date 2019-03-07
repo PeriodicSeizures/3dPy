@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 
 pi = math.pi
 
@@ -19,6 +20,9 @@ class renderer:
 
         self.currentInterval = 0
     def render(self, clock, delta):
+        # clear screen before draw
+        self.display.fill((255,255,255))
+        
         # draw all objects
         for obj in self.objects:
             for tri in obj:
@@ -31,7 +35,12 @@ class renderer:
                         vert[1]*f
                     ])
                     
-                pygame.draw.polygon(display, (255*(q/len(quads)),0,50), [
+                # random.randint(1,21)*5,
+                r = random.randint(100,256)
+                g = random.randint(100,256)
+                b = random.randint(100,256)
+                #255*(q/len(quads)),0,50
+                pygame.draw.polygon(display, (r,g,b), [
                     (
                         screen_verts[0][0]+self.cx,(self.h-screen_verts[0][1]+self.cy)-self.h
                     ),
@@ -54,8 +63,7 @@ class renderer:
     def addObject(obj):
         self.objects.append(obj)
         
-    def addObjectArray(objects): # list of objects:
-        
+    def addObjectArray(objects): # take a list of objects:
         for i in objects: # add each object
             self.objects.append(i)
 
