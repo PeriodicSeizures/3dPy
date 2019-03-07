@@ -17,8 +17,8 @@ class renderer:
 
         self.display = pygame.display.set_mode((w,h))
 
-        self.currentInterval=0
-    def update(self, clock, delta):
+        self.currentInterval = 0
+    def render(self, clock, delta):
         # draw all objects
         for obj in self.objects:
             for tri in obj:
@@ -53,10 +53,14 @@ class renderer:
 
     def addObject(obj):
         self.objects.append(obj)
-##    def addObjectArray(obj):
-##        for i in obj:
-##            self.objects.append(i)
+        
+    def addObjectArray(objects): # list of objects:
+        
+        for i in objects: # add each object
+            self.objects.append(i)
 
+# https://docs.python.org/2/tutorial/controlflow.html#unpacking-argument-lists
+            
 
 # object contains a list of tri
 class object:
