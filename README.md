@@ -1,10 +1,15 @@
 # 3dPython
 
 **Overview**
+  This is a 3d concept written in Python with the Pygame module
 
-Open the main.py
+  Open the main.py
 
-When in game,  use w/a/s/d and shift+space to move.
+  w/a/s/d : directional movement
+  space/shift : ascend/descend
+  mouse : look around
+  f : focus/unfocus
+  esc : exit
 
 
 
