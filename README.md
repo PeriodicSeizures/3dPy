@@ -6,34 +6,45 @@
   Open the main.py
 
   w/a/s/d : directional movement
+  
   space/shift : ascend/descend
+  
   mouse : look around
+  
   f : focus/unfocus
+  
   esc : exit
 
 
 
 **ChangeLog:**
 
-  added v1.4, only triangles work now
-  
-  semi-patched the mirroring/clipped verts issue (verts which would clip don't get drawn)
-  
-  objects stored in a file "map.json"
 
-
+  1.4
+    
+    Game is now entirely triangles (I havnt experimented with shapes with more than 3 sides as of 1.4)
+    
+    Objects stored in map.json 
+    
+    Clipping issue partially solved, but is still a wip
+    
+    
 
 **ToDo:**
 
   ~implement new way to create / draw quads.~
   
-  probably stop using python for this (as python is slower)
+  ~probably stop using python for this (as python is slower)~
+  
+  implement textures
 
   fix the entire issue with triangles clipping. 
   
   create some model from the triangles to show what this is capable of
   
-  implement a depth buffer
+  ~implement a depth buffer~
+  
+  probably wont need a depth buffer due to the capabilities of triangles
   
   physics (gravity, jumping, smooth walking...)
   
