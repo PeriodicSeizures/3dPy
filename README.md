@@ -1,24 +1,24 @@
 # 3dPython
 
 **Overview**
-  This is a 3d concept written in Python with the Pygame module
 
-  Open the main.py
+  This is a 3d concept which includes a *3d engine* WIP
 
-  w/a/s/d : directional movement
-  
-  space/shift : ascend/descend
-  
-  mouse : look around
-  
-  f : focus/unfocus
-  
-  esc : exit
+    Open the main.py
+
+    w/a/s/d : directional movement
+
+    space/shift : ascend/descend
+
+    mouse : look around
+
+    f : focus/unfocus
+
+    esc : exit
 
 
 
 **ChangeLog:**
-
 
   1.4
     
