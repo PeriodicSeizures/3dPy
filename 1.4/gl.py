@@ -29,18 +29,41 @@ class renderer:
         for obj in self.objects:
             for tri in obj:
                 screen_verts = []
+                
+                # This handles clipping issues.
+                # Not entirely functional, but is all I could think of
                 isFirstLogged = False
                 first = []
+                
                 for vert in tri:
                 #for v in range(0,len(tri)):
                     vertex = [vert[0],vert[1],vert[2]]
                     #print(vertex)
                     vertex[0] -= camera.x; vertex[1] -= camera.y; vertex[2] -= camera.z
 
-                    # clipping issue
+                    # Rotate vert(x,z) in screen view based on camera ry
+                    """
+                            As camera rotates
+                                around y,
+                                /‾> |  ‾\
+                    Camera(x,z) \___|___/
+                    will change     |        /
+                                    |      /
+                  But the camera    |    /
+                  position doesn't  |  /
+                  need to change,   |/______________
                     
+                            So only change the vert(x,z)
+                    
+                    
+                    
+                    """
                     vertex[0], vertex[2] = rotate2d((vertex[0],vertex[2]), camera.ry)
+                    
+                    # Rotate vert(y,z) in screen view based on camera rx
                     vertex[1], vertex[2] = rotate2d((vertex[1],vertex[2]), camera.rx)
+                    
+                    # 
 
                     f = 200/vertex[2]
                     
@@ -51,7 +74,10 @@ class renderer:
                         (self.h-(vertex[1]*f)+self.cy)-self.h
                     ]
                     
+                    # Draw verts that arent invalid
                     if f > 0:
+                        
+                        # Add vert if was not already added
                         if not isFirstLogged:
                             first = v
                             isFirstLogged = True
