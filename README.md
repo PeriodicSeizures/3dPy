@@ -1,50 +1,37 @@
 # 3dPython
 
-TODO:
+**Overview**
 
-  implement new way to create / draw quads.
-  
-  probably stop using python for this (as python is slower)
-
-  new defs():
-  
-    # create quad in location with size and rotation
-    def Quad(x,y,w,h,rx,ry):
-    
-    # create 2 points which define a quad (is not accurate, since quad CAN swivel around those 2 points)
-    def Quad(x1,y1,z1,x2,y2,z2):
-    
-    
-    
-    # probably the approach to use: create a plane as defined by a vector
-    def Plane()
-
-
-
-https://brilliant.org/wiki/3d-coordinate-geometry-equation-of-a-plane/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-desc:
-
-A small 3d concept written in Python, not like minecraft, but this has Quads which can have *almost* any rotation and size
-
-To run, just download the 1.1 folder or ALL of its contents to a directory, then run the "simple-draw-attempt.py" 
-preferably with python IDLE. 
+Open the main.py
 
 When in game,  use w/a/s/d and shift+space to move.
 
-You will spawn in the box, but just back up with "s" before moving your mouse.
 
-There are bugs, but this is 3d in python, so not much is expected...
+
+**ChangeLog:**
+
+  added v1.4, only triangles work now
+  
+  semi-patched the mirroring/clipped verts issue (verts which would clip don't get drawn)
+  
+  objects stored in a file "map.json"
+
+
+
+**ToDo:**
+
+  ~implement new way to create / draw quads.~
+  
+  probably stop using python for this (as python is slower)
+
+  fix the entire issue with triangles clipping. 
+  
+  create some model from the triangles to show what this is capable of
+  
+  implement a depth buffer
+  
+  physics (gravity, jumping, smooth walking...)
+  
+  dividing by zero errors
+  
+  perspective is clunky with objects when looked at a certain way in corner of screen
