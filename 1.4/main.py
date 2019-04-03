@@ -19,7 +19,7 @@ clock = pygame.time.Clock()
 renderer = gl.renderer(600, 600)
 camera = gl.camera()
 
-with open("map.json") as f:
+with open("map-example0.json") as f:
     objects = json.load(f)
     renderer.addObjectArray(objects)
 
