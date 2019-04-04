@@ -66,8 +66,8 @@ class renderer:
 
                     
                     ####################################
-                    #################################### START
-                    ####################################
+                    #################################### START (of test; not)
+                    ####################################       (actual plot)
 
 
                     vt = [tri[0][0],tri[0][1],tri[0][2]]
@@ -235,11 +235,40 @@ class camera:
 def clamp(num, small, big):
     return max(min(num, big), small)
 
-def screenClamp(x0, y0, x1, y1, renderer):
-    if(x0<0 or x0>renderer.w):
-    	y = y0-((y1-y0)/(x1-x0)) * x0
-	x = #randerer.w correct position being MAX or 0
-	# limit clip to position
+# undefined, but should be called only if invalid vert is found
+def screenClamp(verts, renderer):
+    #m = (y1-y0)/(x1-x0)
+    #m = ()/()
+
+    # ALL of below just correctly assigns x/y to work with
+    for i in range(0,len(verts)-1):
+        if verts[i][0] < 0:
+            m=(poly[i][1]-poly[i+1][1])/poly[i][0]-poly[i+1][0]
+        elif poly[i][0] > renderer.w:
+            
+    if tri[0][0]<0 or <0: # vert consists of
+        if x<0:
+            x = x0; y = y0
+        else:
+            x = x1; y = y1
+
+    elif x0>renderer.w or x1>renderer.w:
+        if x0>renderer.w:
+            y = x0; y = y0
+        else:
+            x = x1; y = y1
+    b = y - s*x
+    # set x
+    #x = 0 if x0<=0 or x1<=0 elif x0>=renderer.w or x1>=renderer.w renderer.w else 
+    x = 0 if x0<=0 or x1<=0 elif x0>=renderer.w or x1>=renderer.w renderer.w
+
+    # get variating y-pos
+    y = y0-((y1-y0)/(x1-x0)) * x0
+
+    # set to 0 or renderer.w ; depends on line end
+
+    # reprerer.w correct position being MAX or 0
+    # limit clip to position
 	
     # no else for verticalbecause  camera rotation is limited vertically?
     # unless face does clip vertically, then include an elif...
