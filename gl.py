@@ -41,7 +41,7 @@ class renderer:
 					
 						if face has at least 1 vert where f > 0:
 						
-							draw verts with clamp in screen
+							draw verts with clamp adjusted in screen
 							
 						else:
 						
@@ -234,7 +234,14 @@ class camera:
             
 def clamp(num, small, big):
     return max(min(num, big), small)
-'''
-def screenClamp(x0, y0, x1, y1):
+
+def screenClamp(x0, y0, x1, y1, renderer):
+    if(x0<0 or x0>renderer.w):
+    	y = y0-((y1-y0)/(x1-x0)) * x0
+	x = #randerer.w correct position being MAX or 0
+	# limit clip to position
+	
+    # no else for verticalbecause  camera rotation is limited vertically?
+    # unless face does clip vertically, then include an elif...
+	
     
-'''
