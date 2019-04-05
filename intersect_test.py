@@ -1,8 +1,16 @@
 # http://www.ambrsoft.com/MathCalc/Line/TwoLinesIntersection/TwoLinesIntersection.htm
 
+class Line:
+    def __init__(self, x1,y1,x2,y2):
+        self.verts = [{},{}]
+        self.verts[0] = {'x1' : x1, 'y1' : y1}
+        self.verts[1] = {'x2' : x2, 'y2' : y2}
+    def get_vert(v):
+        return self.verts[v]
+        
 def cross(x1,y1,x2,y2): return x1*y2 - y1*x2
 
-def intersect(x1,y1, x2,y2, x3,y3, x4,y4, renderer):
+def intersect(x1,y1, x2,y2, x3,y3, x4,y4):
     x = cross(x1,y1, x2,y2)
     y = cross(x3,y3, x4,y4)
     det = cross(x1-x2, y1-y2, x3-x4, y3-y4)
@@ -11,19 +19,21 @@ def intersect(x1,y1, x2,y2, x3,y3, x4,y4, renderer):
     return x,y
 
 def main():
-    line = []
+    lines = []
+    lines.append(Line(4,49,27,2))
+    lines.append(Line(4,25,51,22))
+
+    vert1 = lines[0].get_vert(0)
+    vert2 = lines[0].get_vert(1)
+    vert3 = lines[1].get_vert(0)
+    vert4 = lines[1].get_vert(1)
     
-    line[0] = {'x1' : 4,'y1' : 49,
-              'x2' : 27, 'y2' : 2}
-    line[1] = {'x1' : 4,'y1' : 25,
-              'x2' : 51, 'y2' : 22}
+    x,y = intersect(vert1['x1'], vert1[0]['y1'],
+                 vert2[0]['x2'], vert2[0]['y2'],
+                 vert3[1]['x1'], vert3[1]['y1'],
+                 vert4[1]['x2'], vert4[1]['y2'])
     
-    x,y = intersect(line[0]['x1'], line[0]['y1'],
-                 line[0]['x2'], line[0]['y2'],
-                 line[1]['x1'], line[1]['y1'],
-                 line[1]['x2'], line[1]['y2'])
-    
-    print("Intersection of 2 lines at:%f"  % (x,y))
+    print("Intersection of 2 lines at: %.03f, %.03f" % (x,y))
     
 main()
 
