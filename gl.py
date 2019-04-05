@@ -47,7 +47,8 @@ class renderer:
 						
 							dont draw the face
                 """
-				
+                
+                """
                 for vert in tri:
                     draw = True
                     vertex = [vert[0],vert[1],vert[2]]
@@ -85,18 +86,6 @@ class renderer:
 
                     print(f)
                     
-                    """
-
-                    As the vertex rotates around the camera, the f value will reach +/- infinity if
-                    it continues rotating.
-
-                    When the angle reaches a quadrantal angle in a special case, it will toggle the
-                    sign of the f and continue on from there, changing the appearance and
-                    visual location of the vertex.
-                    
-
-                    """
-
                     
                     ####################################
                     ####################################  END
@@ -108,8 +97,9 @@ class renderer:
                     else:
                         pass
                         #draw = False
-        
-                if draw:
+                """
+
+                if True: # draw
                     for vert in tri:
                     #for v in range(0,len(tri)):
                         vertex = [vert[0],vert[1],vert[2]]
@@ -121,7 +111,7 @@ class renderer:
                         vertex[0], vertex[2] = rotate2d((vertex[0],vertex[2]), camera.ry)
                         vertex[1], vertex[2] = rotate2d((vertex[1],vertex[2]), camera.rx)
 
-                        f = 200/vertex[2]
+                        f = 200/(vertex[2]) # 200/vertex[2]
                         
                         # +self.cx,(self.h-screen_verts[0][1]+self.cy)-self.h
 
@@ -133,36 +123,22 @@ class renderer:
                             #clamp((self.h-(vertex[1]*f)+self.cy)-self.h,0,self.h)
                         ]
                         
-                        #if f > 0:
-                        if True:
+                        if f > 0:
                             if not isFirstLogged:
                                 first = v
                                 isFirstLogged = True
 
                             screen_verts.append(v)
-                                        
-                                
 
-                        """
-                        f = 200/vertex[2] # z distance reciprocal
+                    #####
 
-                        screen_verts.append([
-                                vertex[0]*f,
-                                vertex[1]*f
-                        ])
+                    if
 
-                        # In order to fix clipping / mirroring problem,
-                        # need to remove vert which f < 0
-                        """
-                        
-                    # random.randint(1,21)*5,
-                    r = random.randint(100,255)
-                    g = random.randint(100,255)
-                    b = random.randint(100,255)
-                    #255*(q/len(quads)),0,50
 
+                    #####
+                    
                     screen_verts.append(first)
-                    if len(screen_verts)>3:
+                    if len(screen_verts)>4:
                         pygame.draw.polygon(self.display, (0,50,50), screen_verts)
                         #print("drawing poly")
 						
@@ -235,42 +211,11 @@ class camera:
 def clamp(num, small, big):
     return max(min(num, big), small)
 
-# undefined, but should be called only if invalid vert is found
-def screenClamp(verts, renderer):
-    #m = (y1-y0)/(x1-x0)
-    #m = ()/()
+def cross(x1,y1,x2,y2): return x1*y2 - y1*x2
 
-    # ALL of below just correctly assigns x/y to work with
-    for i in range(0,len(verts)-1):
-        if verts[i][0] < 0:
-            m=(poly[i][1]-poly[i+1][1])/poly[i][0]-poly[i+1][0]
-        elif poly[i][0] > renderer.w:
-            
-    if tri[0][0]<0 or <0: # vert consists of
-        if x<0:
-            x = x0; y = y0
-        else:
-            x = x1; y = y1
-
-    elif x0>renderer.w or x1>renderer.w:
-        if x0>renderer.w:
-            y = x0; y = y0
-        else:
-            x = x1; y = y1
-    b = y - s*x
-    # set x
-    #x = 0 if x0<=0 or x1<=0 elif x0>=renderer.w or x1>=renderer.w renderer.w else 
-    x = 0 if x0<=0 or x1<=0 elif x0>=renderer.w or x1>=renderer.w renderer.w
-
-    # get variating y-pos
-    y = y0-((y1-y0)/(x1-x0)) * x0
-
-    # set to 0 or renderer.w ; depends on line end
-
-    # reprerer.w correct position being MAX or 0
-    # limit clip to position
-	
-    # no else for verticalbecause  camera rotation is limited vertically?
-    # unless face does clip vertically, then include an elif...
-	
-    
+def intersect(x1,y1, x2,y2, x3,y3, x4,y4, renderer):
+    x = cross(x1,y1, x2,y2)
+    y = cross(x3,y3, x4,y4)
+    det = cross(x1-x2, y1-y2, x3-x4, y3-y4)
+    x = cross(x, x1-x2, y, x3-x4) / det
+    y = cross(x, y1-y2, y, y3-y4) / det

@@ -16,7 +16,7 @@ import json
 pygame.init()
 clock = pygame.time.Clock()
 
-renderer = gl.renderer(800, 600)
+renderer = gl.renderer(800, 800)
 camera = gl.camera()
 
 with open("map.json") as f:
