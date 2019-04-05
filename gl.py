@@ -132,8 +132,24 @@ class renderer:
 
                     #####
 
-                    if
+                    for i in range(len(screen_verts)-1):
+                        if screen_verts[i][2] <= 0 or screen_verts[i+1][2] <= 0:
+                            nearz = .0001; farz = self.w
+                            nearside = .00001; farside = 20
 
+                            i1 = intersect(screen_verts[i][0],
+                                           screen_verts[i][2],
+                                           screen_verts[i+1][0],
+                                           screen_verts[i+1][2],
+                                           -nearside, nearz, -farside, farz)
+
+                            i2 = intersect(screen_verts[i][0],
+                                           screen_verts[i][2],
+                                           screen_verts[i+1][0],
+                                           screen_verts[i+1][2],
+                                           nearside, nearz, farside, farz)
+                            if (screen_verts[i][2] < nearz):
+                                if i1
 
                     #####
                     
