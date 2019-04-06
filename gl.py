@@ -31,132 +31,87 @@ class renderer:
         for obj in self.objects:
             for tri in obj:
                 screen_verts = []
+                z_data = []
                 isFirstLogged = False
                 first = []
-                """
 
-                Possible solution to clipping:
-
-                    go through every face:
-					
-						if face has at least 1 vert where f > 0:
-						
-							draw verts with clamp adjusted in screen
-							
-						else:
-						
-							dont draw the face
-                """
-                
-                """
                 for vert in tri:
-                    draw = True
+                #for i in range(0,len(tri)):
                     vertex = [vert[0],vert[1],vert[2]]
                     #print(vertex)
                     vertex[0] -= camera.x; vertex[1] -= camera.y; vertex[2] -= camera.z
 
-                    # clipping issue
-                    
                     vertex[0], vertex[2] = rotate2d((vertex[0],vertex[2]), camera.ry)
                     vertex[1], vertex[2] = rotate2d((vertex[1],vertex[2]), camera.rx)
 
-                    #print(math.degrees(camera.ry))
-
                     f = 200/vertex[2]
-                    #print(f)
 
+                    z_data.append(vertex[2])
+                    #vertex[3] = f
+                                            
+                    # +self.cx,(self.h-screen_verts[0][1]+self.cy)-self.h
+
+                    v = [
+                        (vertex[0]*f)+self.cx,
+                        #clamp((vertex[0]*f)+self.cx,0,self.w),
+
+                        (self.h-(vertex[1]*f)+self.cy)-self.h
+                        #clamp((self.h-(vertex[1]*f)+self.cy)-self.h,0,self.h)
+                    ]
                     
-                    ####################################
-                    #################################### START (of test; not)
-                    ####################################       (actual plot)
+                    if True: #f > 0:
+                        if not isFirstLogged:
+                            first = v
+                            isFirstLogged = True
 
+                        screen_verts.append(v)
 
-                    vt = [tri[0][0],tri[0][1],tri[0][2]]
-                    #print(vertex)
-                    vt[0] -= camera.x; vt[1] -= camera.y; vt[2] -= camera.z
+                """
+                # If at least partially in camera view
+                if not ( (screen_verts[0][0] < 0 and screen_verts[1][0] < 0 and screen_verts[2][0] < 0) or
+                    (screen_verts[0][0] > self.w and screen_verts[1][0] > self.w and screen_verts[2][0] > self.w) or
+                    (screen_verts[0][1] < 0 and screen_verts[1][1] < 0 and screen_verts[2][1] < 0) or
+                    (screen_verts[0][1] > self.h and screen_verts[1][1] > self.h and screen_verts[2][1] > self.h) ):
 
-                    # clipping issue
+                    # If there are verts whose f is negative:
+                    for vert in screen_verts:
+                        if vert[2] < 0:
+                            abs(vert[0]) > 
                     
-                    vt[0], vt[2] = rotate2d((vt[0],vt[2]), camera.ry)
-                    vt[1], vt[2] = rotate2d((vt[1],vt[2]), camera.rx)
+                    if ( (screen_verts[0][0] < 0 and screen_verts[1][0] < 0 and screen_verts[2][0] < 0) or
+                        (screen_verts[0][0] > self.w and screen_verts[1][0] > self.w and screen_verts[2][0] > self.w) or
+                        (screen_verts[0][1] < 0 and screen_verts[1][1] < 0 and screen_verts[2][1] < 0) or
+                        (screen_verts[0][1] > self.h and screen_verts[1][1] > self.h and screen_verts[2][1] > self.h) ):
 
-                    #print(math.degrees(camera.ry))
 
-                    f = 200/vt[2]
 
-                    print(f)
-                    
-                    
-                    ####################################
-                    ####################################  END
-                    ####################################
+                """
+                """
+                for i in range(len(z_data)):
+                    if z_data[i] < 0:
+                        # Find the largest distance to horizontal screen\
+                        _x = screen_verts[i][0]
+                        _x = max(screen_verts[i][0],
+                                 screen_verts[i][0]-self.w)
+                        
+                        _y = max(screen_verts[i][1],
+                                 screen_verts[i][1]-self.h)
 
-                    
-                    if f>0:
-                        pass
-                    else:
-                        pass
-                        #draw = False
+                        screen_verts[i][0]=_x
+                        screen_verts[i][1]=_y
                 """
 
-                if True: # draw
-                    for vert in tri:
-                    #for v in range(0,len(tri)):
-                        vertex = [vert[0],vert[1],vert[2]]
-                        #print(vertex)
-                        vertex[0] -= camera.x; vertex[1] -= camera.y; vertex[2] -= camera.z
-
-                        # clipping issue
                         
-                        vertex[0], vertex[2] = rotate2d((vertex[0],vertex[2]), camera.ry)
-                        vertex[1], vertex[2] = rotate2d((vertex[1],vertex[2]), camera.rx)
 
-                        f = 200/(vertex[2]) # 200/vertex[2]
                         
-                        # +self.cx,(self.h-screen_verts[0][1]+self.cy)-self.h
-
-                        v = [
-                            (vertex[0]*f)+self.cx,
-                            #clamp((vertex[0]*f)+self.cx,0,self.w),
-
-                            (self.h-(vertex[1]*f)+self.cy)-self.h
-                            #clamp((self.h-(vertex[1]*f)+self.cy)-self.h,0,self.h)
-                        ]
-                        
-                        if f > 0:
-                            if not isFirstLogged:
-                                first = v
-                                isFirstLogged = True
-
-                            screen_verts.append(v)
-
-                    #####
-
-                    for i in range(len(screen_verts)-1):
-                        if screen_verts[i][2] <= 0 or screen_verts[i+1][2] <= 0:
-                            nearz = .0001; farz = self.w
-                            nearside = .00001; farside = 20
-
-                            i1 = intersect(screen_verts[i][0],
-                                           screen_verts[i][2],
-                                           screen_verts[i+1][0],
-                                           screen_verts[i+1][2],
-                                           -nearside, nearz, -farside, farz)
-
-                            i2 = intersect(screen_verts[i][0],
-                                           screen_verts[i][2],
-                                           screen_verts[i+1][0],
-                                           screen_verts[i+1][2],
-                                           nearside, nearz, farside, farz)
-                            if (screen_verts[i][2] < nearz):
-                                if i1
-
-                    #####
                     
-                    screen_verts.append(first)
-                    if len(screen_verts)>4:
-                        pygame.draw.polygon(self.display, (0,50,50), screen_verts)
-                        #print("drawing poly")
+                print(vertex[2], round(camera.ry*180/3.1415926,1))    
+
+                screen_verts.append(first)
+                if len(screen_verts)>4:
+                    pygame.draw.polygon(self.display, (0,50,50), screen_verts)
+                    #pygame.draw.circle(self.display, (255,0,0), (int(screen_verts[0][0]),int(screen_verts[0][1])), 5, 0)
+                    #print("drawing poly")
 						
                 """
                 pygame.draw.polygon(self.display, (r,g,b), [
@@ -227,11 +182,27 @@ class camera:
 def clamp(num, small, big):
     return max(min(num, big), small)
 
-def cross(x1,y1,x2,y2): return x1*y2 - y1*x2
+def intersect(p0_x, p0_y, 
+              p1_x, p1_y, 
+              p2_x, p2_y, 
+              p3_x, p3_y):
 
-def intersect(x1,y1, x2,y2, x3,y3, x4,y4, renderer):
-    x = cross(x1,y1, x2,y2)
-    y = cross(x3,y3, x4,y4)
-    det = cross(x1-x2, y1-y2, x3-x4, y3-y4)
-    x = cross(x, x1-x2, y, x3-x4) / det
-    y = cross(x, y1-y2, y, y3-y4) / det
+    s1_x = p1_x - p0_x
+    s1_y = p1_y - p0_y
+    s2_x = p3_x - p2_x
+    s2_y = p3_y - p2_y
+
+    #float s, t;
+    s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y)
+    t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y)
+
+    if (s >= 0 and s <= 1 and t >= 0 and t <= 1):
+        # Collision detected
+        #if (i_x != None):
+        #x = p0_x + (t * s1_x);
+        #if (i_y != None):
+        #y = p0_y + (t * s1_y);
+        return (round(p0_x + (t * s1_x),3),
+                round(p0_y + (t * s1_y),3))
+
+    return None, None #false; # No collision
