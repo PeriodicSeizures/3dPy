@@ -1,17 +1,6 @@
-"""
-
-How to wrap several classes under 1 type:
-
-like a camera + gl_screen under 1 larger *game*
-
-
-"""
-
-
 import gl
 import math
 import pygame
-import json
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -19,13 +8,9 @@ clock = pygame.time.Clock()
 renderer = gl.renderer(400, 400)
 camera = gl.camera()
 
-with open("map.json") as f:
-    objects = json.load(f)
-    renderer.addObjectArray(objects)
-    f.close()
-
 pygame.event.get(); pygame.mouse.get_rel()
-pygame.mouse.set_visible(0); pygame.event.set_grab(1)
+def lock_mouse():
+    pygame.mouse.set_visible(0); pygame.event.set_grab(1)
 
 focus = True
 
@@ -44,8 +29,7 @@ while(run):
                     pygame.event.set_grab(0)
                     pygame.mouse.set_visible(1)
                 else:
-                    pygame.event.set_grab(1)
-                    pygame.mouse.set_visible(0)
+                    lock_mouse()
                 focus = not focus
         if focus:
             camera.events(event)

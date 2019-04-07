@@ -1,0 +1,45 @@
+[
+    {
+		"name" : "wall",
+		"pos" : [0,0,0],
+		"faces" : 
+		[
+			{
+				"texture" : "example.png",
+				"verts" :
+				[
+					[0,0,0],
+					[0,0,1],
+					[1,0,1]
+				]
+			},
+			{
+				"texture" : "example.png",
+				"verts" :
+				[
+					[0,0,0],
+					[1,0,1],
+					[1,0,0]
+				]
+			},
+			{
+				"texture" : "example.png",
+				"verts" :
+				[
+					[0,0,0],
+					[1,0,0],
+					[1,1,0]
+				]
+			},
+			{
+				"texture" : "example.png",
+				"verts" :
+				[
+					[0,0,1],
+					[1,0,1],
+					[1,1,1]
+				]
+			}
+		]
+	}
+]

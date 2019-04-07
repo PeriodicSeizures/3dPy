@@ -1,22 +1,29 @@
 import pygame
 import math
 import random
+import json
 
 pi = math.pi
 
 def rotate2d(pos,rad): x,y = pos; s,c = math.sin(rad), math.cos(rad); return x*c-y*s,y*c+x*s
 
-#print(rotate2d([], ))
+class object:
+    def __init__(self, name, pos, faces):
+        self.name = name
+        self.pos = pos
+        self.faces = faces
 
-# renderer
-#   is the gameplay screen
-#   will get a list of objects to render
-#   caption: fps
-#   
+with open("test.json") as file: # Need to redo the key finds in drawing
+                                # methods
+    f = json.load(file)
+    objects = []
+    for obj_name, value in f.items():
+        objects.append(object(obj_name, f[obj_name]["pos"], f[obj_name]["faces"]))
+    file.close()
+    #print(objects[0].faces)
+
 class renderer:
     def __init__(self, w, h):
-        self.objects = []
-        self.size = [w,h]
         self.w = w; self.h = h
         self.cx = w//2; self.cy = h//2
 
@@ -26,72 +33,64 @@ class renderer:
     def render(self, clock, delta, camera):
         # clear screen before draw
         self.display.fill((255,255,255))
-        
+        minZ = .4
+	
         # draw all objects
-        for obj in self.objects:
-            for tri in obj:
-                screen_verts = []
-                z_data = []
-                isFirstLogged = False
-                first = []
+        for obj in objects:
 
-                for vert in tri:
-                #for i in range(0,len(tri)):
-                    vertex = [vert[0],vert[1],vert[2]]
-                    #print(vertex)
-                    vertex[0] -= camera.x; vertex[1] -= camera.y; vertex[2] -= camera.z
+            vert_list=[]
+            for face in obj.faces:
+                for v in face["verts"]:
+                    #print(v)
+                    vert_list.append(getWorldCoord(v, camera))
 
-                    vertex[0], vertex[2] = rotate2d((vertex[0],vertex[2]), camera.ry)
-                    vertex[1], vertex[2] = rotate2d((vertex[1],vertex[2]), camera.rx)
-
-                    f = 200/vertex[2]
-
-                    z_data.append(vertex[2])
-                    #vertex[3] = f
-                                            
-                    # +self.cx,(self.h-screen_verts[0][1]+self.cy)-self.h
-
-                    v = [
-                        (vertex[0]*f)+self.cx,
-                        #clamp((vertex[0]*f)+self.cx,0,self.w),
-
-                        (self.h-(vertex[1]*f)+self.cy)-self.h
-                        #clamp((self.h-(vertex[1]*f)+self.cy)-self.h,0,self.h)
-                    ]
-                    
-                    screen_verts.append(v)
+            #vert_list = [(getWorldCoord(v, camera) for v in face["verts"]) for face in obj.faces]
+            #print(vert_list)
+            
+            #for f in range(len(obj.faces)):
+            for face in obj.faces:
                 
-##                for i in range(len(z_data)):
-##                    if z_data[i] < 0:
-##                        
-##                        screen_verts[i][0]=_x
-##                        screen_verts[i][1]=_y
+                verts = []
+                #for face in obj.faces[f]:
+                for v in face["verts"]:
+                    print(v)
+                    verts.append(vert_list[v])
+
+                #verts = [(vert_list[v] for v in face) for face in obj.faces[f]["verts"]]
+                print(verts)
+                # clip verts
+
+                # iterate the verts in faces
+                i=0
+                while i<len(verts):
+                    # if vert is clipping
+                    if verts[i][2] < minZ:
+                        sides=[]
+
+                        # left vert
+                        left = verts[i-1]
+
+                        # right vert
+                        right = verts[(i+1) %len(verts)]
+
+                        # if left vert is not clipping
+                        if left[2] >= minZ:
+                            sides += [getZ(verts[i], left, minZ)]
+
+                        # if right vert is not clipping
+                        if right[2] >= minZ:
+                            sides += [getZ(verts[i], right, minZ)]
+                        verts = verts[:i]+sides+verts[i+1:]
+                        i+=len(sides)-1;
+                    i+=1
 
                 screen_verts.append(screen_verts[0])
                 if len(screen_verts)>4:
                     try:
                         pygame.draw.polygon(self.display, (0,50,50), screen_verts)
                     except:
-                        print("error while drawing")
-                    #pygame.draw.circle(self.display, (255,0,0), (int(screen_verts[0][0]),int(screen_verts[0][1])), 5, 0)
-                    #print("drawing poly")
-						
-                """
-                pygame.draw.polygon(self.display, (r,g,b), [
-                    (
-                        screen_verts[0][0]+self.cx,(self.h-screen_verts[0][1]+self.cy)-self.h
-                    ),
-                    (
-                        screen_verts[1][0]+self.cx,(self.h-screen_verts[1][1]+self.cy)-self.h
-                    ),
-                    (
-                        screen_verts[2][0]+self.cx,(self.h-screen_verts[2][1]+self.cy)-self.h
-                    ),
-                    (
-                        screen_verts[0][0]+self.cx,(self.h-screen_verts[0][1]+self.cy)-self.h
-                    ),
-                ], 0)
-                """
+                        print("didnt draw; some error occurred :/")
+					
         self.currentInterval+=delta
         if self.currentInterval>=1:
             self.currentInterval=0
@@ -100,20 +99,11 @@ class renderer:
         pygame.display.flip()
     def addObject(obj):
         self.objects.append(obj)
-        
-    def addObjectArray(self, objects): # take a list of objects:
-        for obj in objects: # add each object
-            self.objects.append(obj)
 
-# https://docs.python.org/2/tutorial/controlflow.html#unpacking-argument-lists
 
-"""
 
-var = {"a":"4"}
 
-"""
 
-# world navigator
 class camera:
     def __init__(self):
         self.x = 0; self.y = 0; self.z = 0
@@ -176,4 +166,19 @@ def getZ(A, B, newZ):
     i=(newZ-A[2])/dz
     return A[0]+dx*i,A[1]+dy*i,newZ
 
-def get2D(v): return cx+int(v[0]/v[2]*projX),cy+int(v[1]/v[2]*projY)
+def getDisplayCoord(vertex, display):
+    f = 200/vertex[2]
+
+    v = [ (vertex[0]*f)+display.cx, (display.h-(vertex[1]*f)+display.cy)-display.h ]
+    
+    return v
+
+def getWorldCoord(vertex, camera):
+    v = [vertex[0], vertex[1], vertex[2]]
+    
+    v[0] -= camera.x; v[1] -= camera.y; v[2] -= camera.z
+
+    v[0], v[2] = rotate2d((v[0],v[2]), camera.ry)
+    v[1], v[2] = rotate2d((v[1],v[2]), camera.rx)
+    return v
+    
