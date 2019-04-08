@@ -13,6 +13,7 @@ class GameObject:
         self.name = gameObject["name"]
         self.isRigid = gameObject["isRigid"]
         self.pos = gameObject["pos"]
+        #print(self.pos)
         self.faces = []
         if self.isRigid:
             self.velocity = [0,0,0]
@@ -53,15 +54,13 @@ class GameObject:
             r_faces.append(face["verts"])
         return r_faces
 
-
 gameObjects = []
 with open("objects.json") as file:
     f = json.load(file)
     for gameObject in f:
+        #print(gameObject["pos"][2])
         gameObjects.append(GameObject(gameObject)) #["name"], mod["pos"], mod["faces"]))
 
-
-##
 ##objects = []
 ##with open("objects.json") as file:
 ##    f = json.load(file)
@@ -70,15 +69,25 @@ with open("objects.json") as file:
 ##    #        objects.append(model(mod["name"], mod["pos"], mod["faces"]))
 
     
-def get3dVert(vertex, camera, pos):
-    v = [vertex[0]-camera.x+pos[0], vertex[1]-camera.y+pos[1], vertex[2]-camera.z+pos[2]]
+def get3dVert(vertex, caster, gameObjectPos):
+    # WAS - FOR x,y,z
+    v = [vertex[0]-caster.pos[0]+gameObjectPos[0], vertex[1]-caster.pos[1]+gameObjectPos[1], vertex[2]-caster.pos[2]+gameObjectPos[2]]
+
+##    print("vertex", vertex,
+##          "caster", caster.pos,
+##          "gameObjectPos", gameObjectPos,
+##          "3dvert:", v)
     
-    v[0], v[2] = rotate2d((v[0],v[2]), camera.ry)
-    v[1], v[2] = rotate2d((v[1],v[2]), camera.rx)
+    v[0], v[2] = rotate2d((v[0],v[2]), caster.ry)
+    v[1], v[2] = rotate2d((v[1],v[2]), caster.rx)
 
     return v
 
 def get2dVert(vertex, display):
+    
+    # vertex z is 0 in for unknown reason
+    # possibly position of camera not added to vert, so 0,0,0 vert would
+    # return err
     f = 200/vertex[2]
 
     v = [(vertex[0]*f)+display.cx,
@@ -87,6 +96,11 @@ def get2dVert(vertex, display):
     return v
 
 minZ = .1
+
+##colors = [
+##        int(math.random()*255), 
+##
+##    ]
 
 class Renderer:
     def __init__(self, w, h):
@@ -105,7 +119,7 @@ class Renderer:
 ##                if "faces" in mod:#####
 ##                    self.objects.append(model(mod["name"], mod["pos"], mod["faces"]))
 
-    def render(self, clock, delta, camera):
+    def render(self, clock, delta, caster):
         # clear screen before draw
         self.display.fill((255,255,255))
         
@@ -114,7 +128,8 @@ class Renderer:
             if gameObject.faces:
                 
                 for face in gameObject.getRawFaces():
-                    verts3d = [get3dVert(vert, camera, gameObject.pos) for vert in face]
+                    verts3d = [get3dVert(vert, caster, gameObject.pos) for vert in face]
+                    #for vt in verts3d: print(vt[2])
                     
                     i=0
                     while i<len(verts3d):
@@ -143,14 +158,17 @@ class Renderer:
                     #print(verts3d)
 
                     if verts3d:
-                        verts2d = [get2dVert(vert, self) for vert in verts3d]
+                        verts2d=[]
+                        for vert in verts3d:
+                            verts2d.append(get2dVert(vert,self))
+                        #verts2d = [get2dVert(vert, self) for vert in verts3d]
 
-                        verts2d.append(verts2d[0])
+                        #verts2d.append(verts2d[0])
 
                     #print(verts2d)
 
                     try:
-                        pygame.draw.polygon(self.display, (0,50,50), verts2d)
+                        pygame.draw.polygon(self.display, (0, 127, 50), verts2d)
                     except: pass
 
         self.currentInterval+=delta
@@ -170,8 +188,8 @@ class Renderer:
         self.objects.append(gameObject)
 
 class Player:
-    def __init__(self, pos=[0,0,0]):
-        self.x = 0; self.y = 0; self.z = 0
+    def __init__(self, pos=[1,1,1]):
+        self.pos = pos
         self.ry = 0; self.rx = 0               #####
         self.camera = Camera(self)
 
@@ -182,26 +200,24 @@ class Player:
             self.ry+=x
             
         self.camera.events(event)
-
-        self.rx = self.camera.rx
         
     def move(self, delta, key):
         speed = delta * 5
 
         x,y = speed*math.sin(self.ry), speed*math.cos(self.ry)
         
-        if key[pygame.K_w]: self.x+=x; self.z+=y
-        if key[pygame.K_s]: self.x-=x; self.z-=y
-        if key[pygame.K_a]: self.x-=y; self.z+=x
-        if key[pygame.K_d]: self.x+=y; self.z-=x
+        if key[pygame.K_w]: self.pos[0]+=x; self.pos[2]+=y
+        if key[pygame.K_s]: self.pos[0]-=x; self.pos[2]-=y
+        if key[pygame.K_a]: self.pos[0]-=y; self.pos[2]+=x
+        if key[pygame.K_d]: self.pos[0]+=y; self.pos[2]-=x
         
-        if key[pygame.K_SPACE]: self.y+=speed
-        if key[pygame.K_LSHIFT]: self.y-=speed
+        if key[pygame.K_SPACE]: self.pos[1]+=speed
+        if key[pygame.K_LSHIFT]: self.pos[1]-=speed
 
 class Camera:
     def __init__(self, parent):
         self.mode = 0 #0:first; 1:third; 2:third_extended
-        #self.x = 0; self.y = 0; self.z = 0
+        self.pos = parent.pos
         self.parent = parent #gameObjects[0]
         self.rx = 0 #; self.ry = 0
         
@@ -212,6 +228,34 @@ class Camera:
             
         # clamp rx rotation [-pi/2,pi/2]
         self.rx = clamp(self.rx, -pi/2, pi/2)
+        self.ry = self.parent.ry
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_F5:
+                
+                self.mode = (self.mode+1)%3
+                print("pressed; mode :",self.mode)
+
+        #if self.mode == 0: #first person
+        self.pos = self.parent.pos
+        if self.mode == 1: #third person:
+            # beta = ry
+            d = 3
+            self.pos[0] += d * (math.cos(self.ry+pi)*math.cos(self.ry+pi))
+            self.pos[1] += d * (math.sin(self.rx+pi)*math.cos(self.ry+pi))
+            self.pos[2] += d * (math.sin(self.ry+pi))
+
+        elif self.mode == 2: #third person extended
+            d = 5
+            self.pos[0] += d * (math.cos(self.ry+pi)*math.cos(self.ry+pi))
+            self.pos[1] += d * (math.sin(self.rx+pi)*math.cos(self.ry+pi))
+            self.pos[2] += d * (math.sin(self.ry+pi))
+
+        ##################################
+        ####################################################
+        # Set position to player
+
+        # where is camera moved from player?
         
         #self.rx = max(min(self.rx, pi/2), -pi/2)
         

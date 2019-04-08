@@ -27,7 +27,7 @@ for gameObject in gl.gameObjects:
 
 class physics:
     def __init__(self):
-        self.gravity = -1
+        self.gravity = -2
         self.isActive = True
                             
     def update(self, delta):

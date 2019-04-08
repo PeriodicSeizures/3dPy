@@ -30,6 +30,7 @@ while(run):
                 else:
                     game.lockMouse()
                 focus = not focus
+            #player.camera.events()
         if focus:
             #camera.events(event)
             player.events(event)
@@ -38,6 +39,9 @@ while(run):
         key = pygame.key.get_pressed()
         #camera.move(delta, key)
         player.move(delta, key)
+        # Just move all key events for testing into Player loop if
+        # are player specific
+        
 
-        game.render(clock, delta, player)
+        game.render(clock, delta, player.camera)
         physix.update(delta)

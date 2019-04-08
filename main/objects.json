@@ -2,12 +2,33 @@
 	{
 		"name" : "Player",
 		"isRigid" : false,
-		"pos" : [2,2,2]
+		"pos" : [5,5,5],
+		"faces" : 
+		[
+			{
+				"texture" : "example.png",
+				"verts" :
+				[
+					[0,0,0],
+					[0,0,1],
+					[1,0,1]
+				]
+			},
+			{
+				"texture" : "example.png",
+				"verts" :
+				[
+					[0,0,0],
+					[1,0,1],
+					[1,0,0]
+				]
+			}
+		]
 	},
     {
 		"name" : "cradle",
 		"isRigid" : true,
-		"pos" : [1,1,1],
+		"pos" : [5,5,5],
 		"faces" : 
 		[
 			{
@@ -51,7 +72,7 @@
     {
 		"name" : "floor",
 		"isRigid" : false,
-		"pos" : [1,1,1],
+		"pos" : [0,0,0],
 		"faces" : 
 		[
 			{
