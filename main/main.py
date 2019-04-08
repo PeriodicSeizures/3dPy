@@ -1,12 +1,15 @@
 import gl
 import math
 import pygame
+import physics
 
 pygame.init()
 clock = pygame.time.Clock()
 
-game = gl.renderer(400, 400)
-camera = gl.camera()
+game = gl.Renderer(800, 600)
+#camera = gl.Camera()
+player = gl.Player([1,1,1])
+physix = physics.physics()
 
 focus = True
 
@@ -28,10 +31,13 @@ while(run):
                     game.lockMouse()
                 focus = not focus
         if focus:
-            camera.events(event)
+            #camera.events(event)
+            player.events(event)
             
     if run:
         key = pygame.key.get_pressed()
-        camera.move(delta, key)
+        #camera.move(delta, key)
+        player.move(delta, key)
 
-        game.render(clock, delta, camera)
+        game.render(clock, delta, player)
+        physix.update(delta)
