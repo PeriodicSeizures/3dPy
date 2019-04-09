@@ -1,3 +1,17 @@
-velocity = {x:0,y:0,z:0}
+import operations as op
 
-print(velocity.x)
+if op.pointInTri([[0,0],[1,0],[0,1]],
+               (0.4,0.4)):
+    print("Is in tri")
+else:
+    print("Is not in tri")
+
+
+"""
+
+
+
+
+c
+ab
+"""

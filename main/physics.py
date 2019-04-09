@@ -86,6 +86,7 @@ class physics:
 # Ex:
 # pos=[0,0,0] target=[0,1,0]
 def raycast(pos, target):
+    pass
     """
     if (cast linesegment from pos to target in 2d) to 3d intersects triangle:
 
@@ -95,3 +96,4 @@ def raycast(pos, target):
 
 
     """
+

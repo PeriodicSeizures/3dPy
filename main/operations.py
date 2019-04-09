@@ -1,15 +1,16 @@
 # operators
+import math
 
 def isWithin(val, _min, _max):
     if val > _min and val < _max:
-        return true
-    return false
+        return True
+    return False
 
 
 def isOutside(val, _min, _max):
     if val < _min and val > _max:
-        return true
-    return false
+        return True
+    return False
 
 
 def clamp(num, small, big):
@@ -41,6 +42,25 @@ def intersect(line1, line2):
                 round(p0_y + (t * s1_y),3))
 
     return None, None #false; # No collision
+
+
+
+def pointInTri(tri, point):
+    s=0
+    for vert in tri:
+        y = (vert[1]-point[1])
+        x = (vert[0]-point[0])
+
+        s+=(math.atan2(y,x)*180/math.pi)
+        #s*=180/math.pi
+
+    #s*=180/math.pi
+    print(s)
+    s=abs(s)
+    if isWithin(s, 359.5, 360.5):
+        return True
+    return False
+
 
 ##def intersect(p0_x, p0_y, 
 ##              p1_x, p1_y, 
