@@ -97,3 +97,6 @@ def raycast(pos, target):
 
     """
 
+    # normalized raycast
+def nRaycast(pos, target):
+    rx = 
