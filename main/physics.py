@@ -1,5 +1,6 @@
 import json
 import gl
+import operations as op
 
 ##class rigidbody:
 ##    def __init__(self, obj, useGravity=True, useFriction=True, priority=1):  # Parameters are:
@@ -62,6 +63,10 @@ class physics:
                 # In short, calculate collisions with no ratations.
                 """
 
+                #for _rb in gl.gameObjects:
+                #    pass
+                    
+
                 # Need to iterate every object, and test if rb collides
                 #for gameObject in gl.gameObjects:
 
@@ -78,12 +83,15 @@ class physics:
         
         # perform all physics calculations
 
-def isWithin(val, _min, _max):
-    if val > _min and val < _max:
-        return true
-    return false
+# Ex:
+# pos=[0,0,0] target=[0,1,0]
+def raycast(pos, target):
+    """
+    if (cast linesegment from pos to target in 2d) to 3d intersects triangle:
 
-def isOutside(val, _min, _max):
-    if val < _min and val > _max:
-        return true
-    return false
+        get coords of 
+
+
+
+
+    """

@@ -2,6 +2,7 @@ import pygame
 import math
 import random
 import json
+import operations as op
 
 pi = math.pi
 
@@ -88,7 +89,10 @@ def get2dVert(vertex, display):
     # vertex z is 0 in for unknown reason
     # possibly position of camera not added to vert, so 0,0,0 vert would
     # return err
-    f = 200/vertex[2]
+    if vertex[2]==0:
+        f = 0
+    else:
+        f = 200/vertex[2]
 
     v = [(vertex[0]*f)+display.cx,
          (display.h-(vertex[1]*f)+display.cy)-display.h]
@@ -187,81 +191,88 @@ class Renderer:
     def addObject(self, gameObject):
         self.objects.append(gameObject)
 
-class Player:
-    def __init__(self, pos=[1,1,1]):
-        self.pos = pos
-        self.ry = 0; self.rx = 0               #####
-        self.camera = Camera(self)
-
-    def events(self, event):
-        if event.type == pygame.MOUSEMOTION:
-            x,y = event.rel; x/=200; y/=200
-            #self.rx-=y;
-            self.ry+=x
-            
-        self.camera.events(event)
-        
-    def move(self, delta, key):
-        speed = delta * 5
-
-        x,y = speed*math.sin(self.ry), speed*math.cos(self.ry)
-        
-        if key[pygame.K_w]: self.pos[0]+=x; self.pos[2]+=y
-        if key[pygame.K_s]: self.pos[0]-=x; self.pos[2]-=y
-        if key[pygame.K_a]: self.pos[0]-=y; self.pos[2]+=x
-        if key[pygame.K_d]: self.pos[0]+=y; self.pos[2]-=x
-        
-        if key[pygame.K_SPACE]: self.pos[1]+=speed
-        if key[pygame.K_LSHIFT]: self.pos[1]-=speed
+##class Player:
+##    def __init__(self): #, pos=[1,1,1]):
+##        #self.pos = pos
+##        self.ry = 0; self.rx = 0               #####
+##        self.camera = Camera(self)
+##        self.gameObject = gameObjects[0]
+##
+##    def events(self, event):
+##        if event.type == pygame.MOUSEMOTION:
+##            x,y = event.rel; x/=200; y/=200
+##            #self.rx-=y;
+##            self.ry+=x
+##            
+##        self.camera.events(event)
+##        
+##    def move(self, delta, key):
+##        speed = delta * 5
+##
+##        x,y = speed*math.sin(self.ry), speed*math.cos(self.ry)
+##        
+##        if key[pygame.K_w]: self.pos[0]+=x; self.pos[2]+=y
+##        if key[pygame.K_s]: self.pos[0]-=x; self.pos[2]-=y
+##        if key[pygame.K_a]: self.pos[0]-=y; self.pos[2]+=x
+##        if key[pygame.K_d]: self.pos[0]+=y; self.pos[2]-=x
+##        
+##        if key[pygame.K_SPACE]: self.pos[1]+=speed
+##        if key[pygame.K_LSHIFT]: self.pos[1]-=speed
+##
+##        self.gameObject
+##
+##        # Modify position of "Player" GameObject in GameObjects
+##        # 
 
 class Camera:
-    def __init__(self, parent):
+    def __init__(self):
         self.mode = 0 #0:first; 1:third; 2:third_extended
-        self.pos = parent.pos
-        self.parent = parent #gameObjects[0]
-        self.rx = 0 #; self.ry = 0
+        self.gameObject = gameObjects[0]
+        
+        self.pos = [self.gameObject.pos[0],
+                    self.gameObject.pos[1],
+                    self.gameObject.pos[2]]
+        
+        #self.parent = parent #gameObjects[0]
+        self.rx = 0; self.ry = 0
+
+    def update(self):
+        self.rx = op.clamp(self.rx, -pi/2, pi/2)
+        self.pos = [self.gameObject.pos[0],
+                    self.gameObject.pos[1],
+                    self.gameObject.pos[2]]
+        
+        print(self.gameObject.pos)
+        if self.mode == 1: #third person:
+            # beta = ry
+            d = 3
+            self.pos[0] -= d * (math.cos(self.ry)*math.cos(self.ry))
+            self.pos[1] -= d * (math.sin(self.rx)*math.cos(self.ry))
+            self.pos[2] -= d * (math.sin(self.ry))
+
+        elif self.mode == 2: #third person extended
+            d = 5
+            self.pos[0] += d * (math.cos(self.ry)*math.cos(self.ry))
+            self.pos[1] += d * (math.sin(self.rx)*math.cos(self.ry))
+            self.pos[2] += d * (math.sin(self.ry))
+
         
     def events(self, event):
         if event.type == pygame.MOUSEMOTION:
             x,y = event.rel; x/=200; y/=200
             self.rx-=y; #self.ry+=x
+            self.ry+=x
             
         # clamp rx rotation [-pi/2,pi/2]
-        self.rx = clamp(self.rx, -pi/2, pi/2)
-        self.ry = self.parent.ry
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_F5:
                 
                 self.mode = (self.mode+1)%3
-                print("pressed; mode :",self.mode)
-
-        #if self.mode == 0: #first person
-        self.pos = self.parent.pos
-        if self.mode == 1: #third person:
-            # beta = ry
-            d = 3
-            self.pos[0] += d * (math.cos(self.ry+pi)*math.cos(self.ry+pi))
-            self.pos[1] += d * (math.sin(self.rx+pi)*math.cos(self.ry+pi))
-            self.pos[2] += d * (math.sin(self.ry+pi))
-
-        elif self.mode == 2: #third person extended
-            d = 5
-            self.pos[0] += d * (math.cos(self.ry+pi)*math.cos(self.ry+pi))
-            self.pos[1] += d * (math.sin(self.rx+pi)*math.cos(self.ry+pi))
-            self.pos[2] += d * (math.sin(self.ry+pi))
-
-        ##################################
-        ####################################################
-        # Set position to player
-
-        # where is camera moved from player?
         
-        #self.rx = max(min(self.rx, pi/2), -pi/2)
-        
-##    def move(self, delta, key):
-##        speed = delta * 5
-##
+    def move(self, delta, key):
+        speed = delta * 5
+
 ##        x,y = speed*math.sin(self.ry), speed*math.cos(self.ry)
 ##        
 ##        if key[pygame.K_w]: self.x+=x; self.z+=y
@@ -271,34 +282,18 @@ class Camera:
 ##        
 ##        if key[pygame.K_SPACE]: self.y+=speed
 ##        if key[pygame.K_LSHIFT]: self.y-=speed
+        
+        x,y = speed*math.sin(self.ry), speed*math.cos(self.ry)
+        
+        if key[pygame.K_w]: self.gameObject.pos[0]+=x; self.gameObject.pos[2]+=y
+        if key[pygame.K_s]: self.gameObject.pos[0]-=x; self.gameObject.pos[2]-=y
+        if key[pygame.K_a]: self.gameObject.pos[0]-=y; self.gameObject.pos[2]+=x
+        if key[pygame.K_d]: self.gameObject.pos[0]+=y; self.gameObject.pos[2]-=x
+        
+        if key[pygame.K_SPACE]: self.gameObject.pos[1]+=speed
+        if key[pygame.K_LSHIFT]: self.gameObject.pos[1]-=speed
 
-def clamp(num, small, big):
-    return max(min(num, big), small)
 
-def intersect(p0_x, p0_y, 
-              p1_x, p1_y, 
-              p2_x, p2_y, 
-              p3_x, p3_y):
-
-    s1_x = p1_x - p0_x
-    s1_y = p1_y - p0_y
-    s2_x = p3_x - p2_x
-    s2_y = p3_y - p2_y
-
-    #float s, t;
-    s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y)
-    t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y)
-
-    if (s >= 0 and s <= 1 and t >= 0 and t <= 1):
-        # Collision detected
-        #if (i_x != None):
-        #x = p0_x + (t * s1_x);
-        #if (i_y != None):
-        #y = p0_y + (t * s1_y);
-        return (round(p0_x + (t * s1_x),3),
-                round(p0_y + (t * s1_y),3))
-
-    return None, None #false; # No collision
 
 def getZ(A, B, newZ):
     if B[2]==A[2] or newZ<A[2] or newZ>B[2]: return None

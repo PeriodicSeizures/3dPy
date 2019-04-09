@@ -7,8 +7,8 @@ pygame.init()
 clock = pygame.time.Clock()
 
 game = gl.Renderer(800, 600)
-#camera = gl.Camera()
-player = gl.Player([1,1,1])
+camera = gl.Camera()
+#player = gl.Player([1,1,1])
 physix = physics.physics()
 
 focus = True
@@ -18,6 +18,8 @@ game.lockMouse()
 run = True
 while(run):
     delta = clock.tick()/1000
+
+    # Events
     for event in pygame.event.get():
         if event.type == pygame.QUIT: pygame.display.quit(); pygame.quit(); run = False; break
         
@@ -32,16 +34,18 @@ while(run):
                 focus = not focus
             #player.camera.events()
         if focus:
-            #camera.events(event)
-            player.events(event)
-            
+            camera.events(event)
+            #player.events(event)
+
+    # Updates/mEvents:
     if run:
-        key = pygame.key.get_pressed()
-        #camera.move(delta, key)
-        player.move(delta, key)
+        #player.move(delta, key)
         # Just move all key events for testing into Player loop if
         # are player specific
         
+        key = pygame.key.get_pressed()
+        camera.move(delta, key)
+        camera.update()
 
-        game.render(clock, delta, player.camera)
+        game.render(clock, delta, camera)#player.camera)
         physix.update(delta)
