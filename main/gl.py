@@ -14,7 +14,6 @@ class GameObject:
         self.name = gameObject["name"]
         self.isRigid = gameObject["isRigid"]
         self.pos = gameObject["pos"]
-        #print(self.pos)
         self.faces = []
         if self.isRigid:
             self.velocity = [0,0,0]
@@ -59,7 +58,6 @@ gameObjects = []
 with open("objects.json") as file:
     f = json.load(file)
     for gameObject in f:
-        #print(gameObject["pos"][2])
         gameObjects.append(GameObject(gameObject)) #["name"], mod["pos"], mod["faces"]))
 
 ##objects = []
@@ -239,10 +237,10 @@ class Camera:
     def update(self):
         self.rx = op.clamp(self.rx, -pi/2, pi/2)
         self.pos = [self.gameObject.pos[0],
-                    self.gameObject.pos[1],
+                    self.gameObject.pos[1]+1,
                     self.gameObject.pos[2]]
         
-        print(self.gameObject.pos)
+        #print(self.gameObject.pos)
         if self.mode == 1: #third person:
             # beta = ry
             d = 3
@@ -255,6 +253,19 @@ class Camera:
             self.pos[0] += d * (math.cos(self.ry)*math.cos(self.ry))
             self.pos[1] += d * (math.sin(self.rx)*math.cos(self.ry))
             self.pos[2] += d * (math.sin(self.ry))
+
+        """ TEST FOR COLLISION: """
+
+        # NOTE:::
+        # This will only detect collide in CENTER of camera, and not entire
+        # view, as what will be preferred.
+        # This is functional, but is very much a WIP.
+##        for gameObject in gameObjects:
+##            for face in gameObject.faces:
+##                tri = face["verts"]
+##                
+##                if op.hitHoriz3dTri(self.pos, tri):
+##                    print("COLLIDED")
 
         
     def events(self, event):

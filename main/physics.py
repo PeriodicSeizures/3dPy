@@ -1,4 +1,5 @@
 import json
+import copy
 import gl
 import operations as op
 
@@ -28,19 +29,19 @@ for gameObject in gl.gameObjects:
 
 class physics:
     def __init__(self):
-        self.gravity = -2
+        self.gravity = -.5
         self.isActive = True
                             
     def update(self, delta):
         if self.isActive:
             for rb in rigidbodies:
 
-                rb.pos[0] += .5*(rb.velocity[0])*delta
-                rb.pos[1] += .5*(rb.velocity[1])*delta
-                rb.pos[2] += .5*(rb.velocity[2])*delta
-                
-                if rb.useGravity:
-                    rb.velocity[1] += self.gravity*delta
+##                rb.pos[0] += .5*(rb.velocity[0])*delta
+##                rb.pos[1] += .5*(rb.velocity[1])*delta
+##                rb.pos[2] += .5*(rb.velocity[2])*delta
+##                
+##                if rb.useGravity:
+##                    rb.velocity[1] += self.gravity*delta
 
 ##                if rb.useFriction
 ##                # Somewhere here in determining friction, need to test for
@@ -63,6 +64,9 @@ class physics:
                 # In short, calculate collisions with no ratations.
                 """
 
+
+
+
                 #for _rb in gl.gameObjects:
                 #    pass
                     
@@ -75,7 +79,23 @@ class physics:
                     # calculate a rotation created by verts in the tris
 
                     
-                
+                for gameObject in gl.gameObjects:
+                    if gameObject.name!=rb.name:
+                    #if gameObject != rb:
+                        for face in gameObject.faces:
+                            tri = copy.deepcopy(face["verts"])
+                            
+    ##                        for i in range(len(tri)):
+    ##                            for j in range(len(tri[i])):
+    ##                                tri[i][j] += gameObject.pos[j]
+                            
+                            if not op.hitHoriz3dTri(rb.pos, tri):
+                                rb.pos[0] += .5*(rb.velocity[0])*delta
+                                rb.pos[1] += .5*(rb.velocity[1])*delta
+                                rb.pos[2] += .5*(rb.velocity[2])*delta
+                                
+                                if rb.useGravity:
+                                    rb.velocity[1] += self.gravity*delta
 
         
         
@@ -85,6 +105,10 @@ class physics:
 
 # Ex:
 # pos=[0,0,0] target=[0,1,0]
+
+#def detDownHit(pos, ):
+
+
 def raycast(pos, target):
     pass
     """
@@ -99,4 +123,4 @@ def raycast(pos, target):
 
     # raycast at quadrantal angles
 def nRaycast(pos, target):
-    rx = 
+    rx = 0

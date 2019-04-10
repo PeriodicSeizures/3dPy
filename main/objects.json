@@ -1,34 +1,13 @@
 [
 	{
 		"name" : "Player",
-		"isRigid" : false,
-		"pos" : [0,0,0],
-		"faces" : 
-		[
-			{
-				"texture" : "example.png",
-				"verts" :
-				[
-					[0,0,0],
-					[0,0,1],
-					[1,0,1]
-				]
-			},
-			{
-				"texture" : "example.png",
-				"verts" :
-				[
-					[0,0,0],
-					[1,0,1],
-					[1,0,0]
-				]
-			}
-		]
+		"isRigid" : true,
+		"pos" : [3,10,3]
 	},
     {
 		"name" : "cradle",
 		"isRigid" : true,
-		"pos" : [5,5,5],
+		"pos" : [3,10,3],
 		"faces" : 
 		[
 			{
