@@ -97,6 +97,6 @@ def raycast(pos, target):
 
     """
 
-    # normalized raycast
+    # raycast at quadrantal angles
 def nRaycast(pos, target):
     rx = 
