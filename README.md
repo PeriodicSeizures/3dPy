@@ -2,7 +2,11 @@
 
 **Overview**
 
-  This is a 3d concept which includes a *3d engine* WIP
+  3d engine baseline written in Python. Can draw triangles and triangles only (all other shapes are garbage). 
+  
+  Physics in works
+  
+  I say *baseline* because I plan for a possible C++ implementation
 
     Open the main.py
 
@@ -14,40 +18,30 @@
 
     f : focus/unfocus
 
-    esc : exit
+    esc / top-right X : exit
 
 
-
-**ChangeLog:**
-
-  1.4
-    
-    Game is now entirely triangles (I havnt experimented with shapes with more than 3 sides as of 1.4)
-    
-    Objects stored in map.json 
-    
-    Clipping issue partially solved, but is still a wip
-    
-    
 
 **ToDo:**
+  
+  Textures? (will be laggy)
+  
+  ~depth buffer?~
+  
+  Dynamic physics. (jumping, functional collision)
+  
+  Fix perspective near screen border.
 
-  ~implement new way to create / draw quads.~
+  Fix spontaneous freezes.
   
-  ~probably stop using python for this (as python is slower)~
+  Implement LUT for faster maths.
   
-  implement textures
+  *More colors*
 
-  fix the entire issue with triangles clipping. 
+**Patched**
+
+  Verts no longer clip when out of view.
   
-  create some model from the triangles to show what this is capable of
+  No more divide by 0 errors.
   
-  ~implement a depth buffer~
-  
-  probably wont need a depth buffer due to the capabilities of triangles
-  
-  physics (gravity, jumping, smooth walking...)
-  
-  dividing by zero errors
-  
-  perspective is clunky with objects when looked at a certain way in corner of screen
+  #
