@@ -2,7 +2,7 @@
 
 **Overview**
 
-  3d engine baseline written in Python. Can draw triangles and triangles only (all other shapes are garbage). 
+  3d engine baseline written in Python. Can draw triangles and triangles only (all other shapes are *garbage*). 
   
   Physics in works
   
