@@ -22,7 +22,7 @@
 
 
 
-**ToDo:**
+**To Do:**
   
   Textures? (will be laggy)
   
@@ -38,7 +38,7 @@
   
   *More colors*
 
-**Patched**
+**Patched issues**
 
   Verts no longer clip when out of view.
   
