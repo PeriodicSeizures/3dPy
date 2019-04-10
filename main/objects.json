@@ -2,12 +2,12 @@
 	{
 		"name" : "Player",
 		"isRigid" : true,
-		"pos" : [3,10,3]
+		"pos" : [3,5,3]
 	},
     {
 		"name" : "cradle",
 		"isRigid" : true,
-		"pos" : [3,10,3],
+		"pos" : [2,10,2],
 		"faces" : 
 		[
 			{

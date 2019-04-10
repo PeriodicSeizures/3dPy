@@ -78,7 +78,9 @@ class physics:
 
                     # calculate a rotation created by verts in the tris
 
-                    
+
+                # Collisions are only tested between
+                # all rigidbodies, and all gameObjects
                 for gameObject in gl.gameObjects:
                     if gameObject.name!=rb.name:
                     #if gameObject != rb:
@@ -96,6 +98,9 @@ class physics:
                                 
                                 if rb.useGravity:
                                     rb.velocity[1] += self.gravity*delta
+                            else:
+                                print("collide:",gameObject.name,rb.name)
+                                rb.velocity[1] = 0
 
         
         
