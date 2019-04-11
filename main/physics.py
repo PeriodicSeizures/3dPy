@@ -91,8 +91,13 @@ class physics:
     ##                        for i in range(len(tri)):
     ##                            for j in range(len(tri[i])):
     ##                                tri[i][j] += gameObject.pos[j]
+                            
+                            # returns the normalized vector in order to do
+                            # comparisons ...
+                            n = phyMath.normalize(rb.velocity)
+                            
 
-                            n = normalize(rb.velocity)
+                            # If line drawn towards
                             if phyMath.lineIntersect3dTri(tri,[rb.pos,
                                                               [rb.pos[0]+n[0]/10,
                                                                rb.pos[1]+n[1]/10,
@@ -110,13 +115,3 @@ class physics:
 
 
 
-
-
-                                
-def normalize(vector):
-    if vector[0]==0 and vector[1]==0 and vector[2]==0:
-        return [0,0,0]
-    
-    d = phyMath.dist3d([0,0,0], vector)
-    v = [vector[0]/d, vector[1]/d, vector[2]/d]
-    return v

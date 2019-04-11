@@ -77,14 +77,11 @@ def lineIntersect3dTri(T, L):
     _abcd = np.sign(np.linalg.det(abcd))
     _abce = np.sign(np.linalg.det(abce))
 
-    
-    
     if _abcd == -_abce:
         return True
     
     return False
 
-    
 def dist3d(vert1, vert2):
     d = math.sqrt(
 
@@ -97,3 +94,12 @@ def dist3d(vert1, vert2):
 
         )
     return d
+
+                                
+def normalize(vector):
+    if vector[0]==0 and vector[1]==0 and vector[2]==0:
+        return [0,0,0]
+    
+    d = dist3d([0,0,0], vector)
+    v = [vector[0]/d, vector[1]/d, vector[2]/d]
+    return v
