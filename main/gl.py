@@ -2,7 +2,7 @@ import pygame
 import math
 import random
 import json
-import operations as op
+import math2
 
 pi = math.pi
 
@@ -235,7 +235,7 @@ class Camera:
         self.rx = 0; self.ry = 0
 
     def update(self):
-        self.rx = op.clamp(self.rx, -pi/2, pi/2)
+        self.rx = math2.clamp(self.rx, -pi/2, pi/2)
         self.pos = [self.gameObject.pos[0],
                     self.gameObject.pos[1]+1,
                     self.gameObject.pos[2]]

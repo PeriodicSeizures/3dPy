@@ -1,7 +1,8 @@
 import json
 import copy
 import gl
-import operations as op
+import math2 as math2
+import physicsMath as phyMath
 
 ##class rigidbody:
 ##    def __init__(self, obj, useGravity=True, useFriction=True, priority=1):  # Parameters are:
@@ -92,7 +93,7 @@ class physics:
     ##                                tri[i][j] += gameObject.pos[j]
 
                             n = normalize(rb.velocity)
-                            if op.lineIntersect3dTri(tri,[rb.pos,
+                            if phyMath.lineIntersect3dTri(tri,[rb.pos,
                                                               [rb.pos[0]+n[0]/10,
                                                                rb.pos[1]+n[1]/10,
                                                                rb.pos[2]+n[2]/10]]):
@@ -116,6 +117,6 @@ def normalize(vector):
     if vector[0]==0 and vector[1]==0 and vector[2]==0:
         return [0,0,0]
     
-    d = op.dist3d([0,0,0], vector)
+    d = phyMath.dist3d([0,0,0], vector)
     v = [vector[0]/d, vector[1]/d, vector[2]/d]
     return v
