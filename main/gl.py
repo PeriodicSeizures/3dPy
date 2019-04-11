@@ -1,3 +1,18 @@
+"""
+
+https://computergraphics.stackexchange.com/questions/4662/my-perspective-projection-is-messed-up
+
+
+
+
+https://www.lfd.uci.edu/~gohlke/code/transformations.py.html
+
+"""
+
+
+
+
+
 import pygame
 import math
 import random
