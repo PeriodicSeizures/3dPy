@@ -98,7 +98,40 @@ def get3dVert(vertex, caster, gameObjectPos):
     return v
 
 def get2dVert(vertex, display):
+    """
     
+    # fov is 90 deg to radians (so pi/2)
+    fov = 90 / 180 * math.pi; half_fov = fov / 2
+    
+    half_w, half_h = w / 2, h / 2
+    
+    # Half of fov ...
+    projY = half_h / math.tan(half_fov)
+    projX = half_w / math.tan(half_fov) / (w / h)
+    
+    #desmos:
+    #projy eq: (Y)
+    #\frac{300}{\left(\tan\left(.5\left(\frac{x}{180\cdot3.141592}\right)\right)\right)}
+    #proj eq: (X):
+    #\frac{400}{\left(\tan\left(.5\left(\frac{x}{180\cdot3.141592}\right)\right)\right)\cdot.75}
+    
+    
+    #in cube_engine:
+    #def get2D(v): return cx+int(v[0]/v[2]*projX), cy+int(v[1]/v[2]*projY)
+    
+    #pseudo:
+    #return midx + z_dist of x, midy + z_dist of y
+    
+    
+    #new def for implementation:
+    def get2D(v): return cx+int(v[0]/v[2]*projX), cy+int(v[1]/v[2]*projY)
+    
+    
+    # As of now, should move on to c++, as further additions will cause performance issues.
+    
+    # Also, tan() of 90 or 270 will need a anti-break
+    
+    """
     # vertex z is 0 in for unknown reason
     # possibly position of camera not added to vert, so 0,0,0 vert would
     # return err
@@ -114,13 +147,29 @@ def get2dVert(vertex, display):
 
 minZ = .1
 
-##colors = [
-##        int(math.random()*255), 
-##
-##    ]
+
 
 class Renderer:
     def __init__(self, w, h):
+        """
+        # NEW screen z-render:
+        
+        global projX,projY,cx,cy,cam,minZ
+        
+        fov = 90/180*math.pi; half_fov = fov/2
+        half_w,half_h = w/2,h/2
+        projY = half_h/math.tan(half_fov)
+        projX = half_w/math.tan(half_fov)/(w/h)
+        
+        # All of the above will be a constant for use with vert x,y
+        
+        # Also, implement the new 'get2D' method, which uses projX, projZ and direct x/y, y/z
+        
+        
+        # Save a backup of this in case of breakage
+        """
+        
+        
         #self.objects = []
         pygame.event.get(); pygame.mouse.get_rel()
         self.currentInterval = 0
