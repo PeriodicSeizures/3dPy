@@ -1,5 +1,6 @@
 # operators
 import math
+import numpy as np
 
 def isWithin(val, _min, _max):
     if val > _min and val < _max:
@@ -114,6 +115,37 @@ def hitHoriz3dTri(pos, tri): #Tri must be like a floor
     else: 
         return False
 
+"""
+
+A(0,0,0), B(1,0,0), C(0,1,1)
+
+D(0,1/2,0), and E(1,1/2,1)
+
+"""
+
+def lineIntersect3dTri(T, L):
+    a = T[0]; b = T[1]; c = T[2]
+    d = L[0]; e = L[1]
+    
+    abcd = np.array([[a[0], a[1], a[2], 1],
+                     [b[0], b[1], b[2], 1],
+                     [c[0], c[1], c[2], 1],
+                     [d[0], d[1], d[2], 1]])
+
+    abce = np.array([[a[0], a[1], a[2], 1],
+                     [b[0], b[1], b[2], 1],
+                     [c[0], c[1], c[2], 1],
+                     [e[0], e[1], e[2], 1]])
+
+    _abcd = np.sign(np.linalg.det(abcd))
+    _abce = np.sign(np.linalg.det(abce))
+    
+    if ((_abcd < 0 and _abce > 0) or
+        (_abcd > 0 and _abce < 0) or
+        (_abcd == 0 or _abce == 0)):
+        return True
+    
+    return False
     
 """
 #1/3 * (area of base tri) * (h^3)
@@ -121,7 +153,7 @@ def volumeOfTetrahedron(vert, vert2, vert3, vert4):
     h = #heighest pt to base
 """
 
-def distOf3dVertPair(vert1, vert2):
+def dist3d(vert1, vert2):
     d = math.sqrt(
 
             math.pow(vert1[0]-vert2[0], 2) +

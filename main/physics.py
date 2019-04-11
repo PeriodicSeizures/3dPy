@@ -29,7 +29,7 @@ for gameObject in gl.gameObjects:
 
 class physics:
     def __init__(self):
-        self.gravity = -.5
+        self.gravity = -.1
         self.isActive = True
                             
     def update(self, delta):
@@ -85,47 +85,37 @@ class physics:
                     if gameObject.name!=rb.name:
                     #if gameObject != rb:
                         for face in gameObject.faces:
-                            tri = copy.deepcopy(face["verts"])
+                            tri = face["verts"]
                             
     ##                        for i in range(len(tri)):
     ##                            for j in range(len(tri[i])):
     ##                                tri[i][j] += gameObject.pos[j]
-                            
-                            if not op.hitHoriz3dTri(rb.pos, tri):
+
+                            n = normalize(rb.velocity)
+                            if op.lineIntersect3dTri(tri,[rb.pos,
+                                                              [rb.pos[0]+n[0]/10,
+                                                               rb.pos[1]+n[1]/10,
+                                                               rb.pos[2]+n[2]/10]]):
+                                
+                                print("collide:",gameObject.name,rb.name)
+                                rb.velocity[0]=0;rb.velocity[1]=0;rb.velocity[2]=0
+                            else:
                                 rb.pos[0] += .5*(rb.velocity[0])*delta
                                 rb.pos[1] += .5*(rb.velocity[1])*delta
                                 rb.pos[2] += .5*(rb.velocity[2])*delta
                                 
                                 if rb.useGravity:
                                     rb.velocity[1] += self.gravity*delta
-                            else:
-                                print("collide:",gameObject.name,rb.name)
-                                rb.velocity[1] = 0
-
-        
-        
-        
-        
-        # perform all physics calculations
-
-# Ex:
-# pos=[0,0,0] target=[0,1,0]
-
-#def detDownHit(pos, ):
-
-
-def raycast(pos, target):
-    pass
-    """
-    if (cast linesegment from pos to target in 2d) to 3d intersects triangle:
-
-        get coords of 
 
 
 
 
-    """
 
-    # raycast at quadrantal angles
-def nRaycast(pos, target):
-    rx = 0
+                                
+def normalize(vector):
+    if vector[0]==0 and vector[1]==0 and vector[2]==0:
+        return [0,0,0]
+    
+    d = op.dist3d([0,0,0], vector)
+    v = [vector[0]/d, vector[1]/d, vector[2]/d]
+    return v
