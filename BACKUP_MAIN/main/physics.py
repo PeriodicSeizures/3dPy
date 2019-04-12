@@ -95,6 +95,20 @@ class physics:
                             
                             # returns the normalized vector in order to do
                             # comparisons ...
+                            """
+                            To get a box collider from an object,
+                            that object has to have at least 1 concave (pair) of faces
+                            
+                            I say (pair) because the nearby faces dont need to be *attached*.
+                            
+                            This shoouldn't be used because its weird.
+                            
+                            Just get box-collider of complex objects if they have a collider
+                            
+                            NEW :: IMPLEMENT A BOX COLLIDER bool to ALL objects
+                            
+                            
+                            """
                             n = phyMath.normalize(rb.velocity)
                             
 
@@ -121,3 +135,33 @@ class physics:
                         break
 
                 
+                
+##################### ADD THIS BX COLLISION:::
+
+def boxBoxIntersect(box1, box2):
+    x1 = box1.pos[0] - .5*box1.collider[0]; x2 = box1.pos[0] + .5*box1.collider[0]
+    y1 = box1.pos[1] - box1.collider[1]; 
+    if box1.collider['x']
+    """
+    
+    Instead of exactly defining the 8 box verts, 
+    
+    define a (x, y, z)
+    
+        where:
+        x: xscale
+        y: yscale
+        z: zscale
+        
+        center will be at (pos)
+        
+    Ex:
+    
+    collider = {'x' : 2, 'y' : 3, 'z' : 4}
+    
+    referencing coord:
+    
+        a_variable = collider['x']
+    
+    
+    """
