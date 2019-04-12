@@ -19,7 +19,9 @@ class GameObject:
         self.name = gameObject["name"]
         self.isRigid = gameObject["isRigid"]
         self.pos = gameObject["pos"]
+        self.isCollider = gameObjec["isCollider"]
         self.faces = []
+        
         if self.isRigid:
             self.velocity = [0,0,0]
             self.useGravity = True
