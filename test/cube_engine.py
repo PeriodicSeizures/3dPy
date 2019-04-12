@@ -14,8 +14,9 @@ class Cam:
         self.update_rot()
  
     def update_rot(self):
-        self.rotX = math.sin(self.rot[0]),math.cos(self.rot[0])
-        self.rotY = math.sin(self.rot[1]),math.cos(self.rot[1])
+        self.rotX = math.sin(self.rot[0]), math.cos(self.rot[0])
+        self.rotY = math.sin(self.rot[1]), math.cos(self.rot[1])
+        #print(self.rotX)
  
     def events(self,event):
         if event.type == pygame.MOUSEMOTION:
@@ -43,7 +44,8 @@ class Cube:
     def __init__(self,pos=(0,0,0)): x,y,z=pos; self.verts=[(x+X,y+Y,z+Z) for X,Y,Z in self.vertices]
  
 # dont need to check if z is 0 (we clip z at min value)
-def get2D(v): return cx+int(v[0]/v[2]*projX), cy+int(v[1]/v[2]*projY)
+def get2D(v):
+    return cx+int(v[0]/v[2]*projX), cy+int(v[1]/v[2]*projY)
  
 def get3D(v):
     x,y,z = v[0]-cam.pos[0], v[1]-cam.pos[1], v[2]-cam.pos[2]

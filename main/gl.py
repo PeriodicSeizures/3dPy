@@ -1,27 +1,17 @@
-"""
-
-https://computergraphics.stackexchange.com/questions/4662/my-perspective-projection-is-messed-up
-
-
-
-
-https://www.lfd.uci.edu/~gohlke/code/transformations.py.html
-
-"""
-
-
-
-
-
 import pygame
 import math
 import random
 import json
 import math2
+import os
+import copy
 
 pi = math.pi
 
-def rotate2d(pos,rad): x,y = pos; s,c = math.sin(rad), math.cos(rad); return x*c-y*s,y*c+x*s
+def rotate2d(pos, rot):
+    x,y = pos
+    s,c = rot #math.sin(rot), math.cos(rot)
+    return x*c-y*s, y*c+x*s
 
 class GameObject:
     #def __init__(self, name, pos, faces):
@@ -42,20 +32,6 @@ class GameObject:
         if "faces" in gameObject:
             self.faces = gameObject["faces"]
             
-##            for face in self.faces:
-##                f = face["verts"]
-##                for vert in f:
-##                    vert[0]+=1;vert[1]+=1;vert[2]+=1
-
-            
-##        self.name = name
-##        self.pos = pos
-##        self.faces = faces
-##        for face in faces:
-##            f = face["verts"]
-##            for vert in f:
-##                vert[0]+=1;vert[1]+=1;vert[2]+=1
-        
     def getRawVerts(self):
         v = []
         for face in self.faces:
@@ -69,134 +45,68 @@ class GameObject:
             r_faces.append(face["verts"])
         return r_faces
 
+
+
 gameObjects = []
 with open("objects.json") as file:
     f = json.load(file)
     for gameObject in f:
         gameObjects.append(GameObject(gameObject)) #["name"], mod["pos"], mod["faces"]))
 
-##objects = []
-##with open("objects.json") as file:
-##    f = json.load(file)
-##    #for mod in f:
-##    #    if "faces" in mod:#####
-##    #        objects.append(model(mod["name"], mod["pos"], mod["faces"]))
 
-    
-def get3dVert(vertex, caster, gameObjectPos):
+
+def get3dVert(v, camera, gameObjectPos):
     # WAS - FOR x,y,z
-    v = [vertex[0]-caster.pos[0]+gameObjectPos[0], vertex[1]-caster.pos[1]+gameObjectPos[1], vertex[2]-caster.pos[2]+gameObjectPos[2]]
+    x,y,z = v[0]-camera.pos[0]+gameObjectPos[0], v[1]-camera.pos[1]+gameObjectPos[1], v[2]-camera.pos[2]+gameObjectPos[2]
 
-##    print("vertex", vertex,
-##          "caster", caster.pos,
-##          "gameObjectPos", gameObjectPos,
-##          "3dvert:", v)
-    
-    v[0], v[2] = rotate2d((v[0],v[2]), caster.ry)
-    v[1], v[2] = rotate2d((v[1],v[2]), caster.rx)
+    x,z = rotate2d([x,z], camera.ry)
+    y,z = rotate2d([y,z], camera.rx)
 
-    return v
+    return [x,y,z]
 
-def get2dVert(vertex, display):
-    """
-    
-    # fov is 90 deg to radians (so pi/2)
-    fov = 90 / 180 * math.pi; half_fov = fov / 2
-    
-    half_w, half_h = w / 2, h / 2
-    
-    # Half of fov ...
-    projY = half_h / math.tan(half_fov)
-    projX = half_w / math.tan(half_fov) / (w / h)
-    
-    #desmos:
-    #projy eq: (Y)
-    #\frac{300}{\left(\tan\left(.5\left(\frac{x}{180\cdot3.141592}\right)\right)\right)}
-    #proj eq: (X):
-    #\frac{400}{\left(\tan\left(.5\left(\frac{x}{180\cdot3.141592}\right)\right)\right)\cdot.75}
-    
-    
-    #in cube_engine:
-    #def get2D(v): return cx+int(v[0]/v[2]*projX), cy+int(v[1]/v[2]*projY)
-    
-    #pseudo:
-    #return midx + z_dist of x, midy + z_dist of y
-    
-    
-    #new def for implementation:
-    def get2D(v): return cx+int(v[0]/v[2]*projX), cy+int(v[1]/v[2]*projY)
-    
-    
-    # As of now, should move on to c++, as further additions will cause performance issues.
-    
-    # Also, tan() of 90 or 270 will need a anti-break
-    
-    """
-    # vertex z is 0 in for unknown reason
-    # possibly position of camera not added to vert, so 0,0,0 vert would
-    # return err
-    if vertex[2]==0:
-        f = 0
-    else:
-        f = 200/vertex[2]
 
-    v = [(vertex[0]*f)+display.cx,
-         (display.h-(vertex[1]*f)+display.cy)-display.h]
 
-    return v
+def get2dVert(v, 
+              cx, cy,
+              projX, projY):
+    
+    #xr = v[2]*projX
+    #yr = v[2]*projY
+    #print(cx+int(v[0]/v[2]*projX), cy+int(v[1]/v[2]*projY))
+    return cx+int(v[0]/v[2]*projX), cy+int(v[1]/v[2]*projY)
+
+
 
 minZ = .1
 
 
-
 class Renderer:
     def __init__(self, w, h):
-        """
-        # NEW screen z-render:
         
-        global projX,projY,cx,cy,cam,minZ
-        
-        fov = 90/180*math.pi; half_fov = fov/2
-        half_w,half_h = w/2,h/2
-        projY = half_h/math.tan(half_fov)
-        projX = half_w/math.tan(half_fov)/(w/h)
-        
-        # All of the above will be a constant for use with vert x,y
-        
-        # Also, implement the new 'get2D' method, which uses projX, projZ and direct x/y, y/z
-        
-        
-        # Save a backup of this in case of breakage
-        """
-        
-        
-        #self.objects = []
         pygame.event.get(); pygame.mouse.get_rel()
         self.currentInterval = 0
-    
+
+        self.fov = 90/180*math.pi; self.half_fov = self.fov/2
+        self.half_w, self.half_h = w/2,h/2
+        self.projY = self.half_h/math.tan(self.half_fov)
+        self.projX = self.half_w/math.tan(self.half_fov)/(w/h)
+
         self.w = w; self.h = h
         self.cx = w//2; self.cy = h//2
 
+        os.environ['SDL_VIDEO_CENTERED'] = '1'
         self.display = pygame.display.set_mode((w,h))
-        
-##        with open("objects.json") as file:
-##            f = json.load(file)
-##            for mod in f:
-##                if "faces" in mod:#####
-##                    self.objects.append(model(mod["name"], mod["pos"], mod["faces"]))
+
 
     def render(self, clock, delta, caster):
         # clear screen before draw
         self.display.fill((255,255,255))
         
-        #verts = [obj.getRawVerts() for obj in self.objects]
         for gameObject in gameObjects:
             if gameObject.faces:
                 
                 for face in gameObject.getRawFaces():
-                    verts3d = [get3dVert(vert, caster, gameObject.pos) for vert in face]
-                    #for vt in verts3d: print(vt[2])
-                    
+                    verts3d = [get3dVert(vert, caster, gameObject.pos) for vert in face]                    
                     i=0
                     while i<len(verts3d):
                         
@@ -221,18 +131,13 @@ class Renderer:
                             i+=len(sides)-1;
                         i+=1
 
-                    #print(verts3d)
-
                     if verts3d:
                         verts2d=[]
                         for vert in verts3d:
-                            verts2d.append(get2dVert(vert,self))
-                        #verts2d = [get2dVert(vert, self) for vert in verts3d]
-
-                        #verts2d.append(verts2d[0])
-
-                    #print(verts2d)
-
+                            verts2d.append(get2dVert(vert,
+                                                     self.cx, self.cy,
+                                                     self.projX, self.projY))
+                            
                     try:
                         pygame.draw.polygon(self.display, (0, 127, 50), verts2d)
                     except: pass
@@ -244,130 +149,60 @@ class Renderer:
 
         pygame.display.flip()
 
+
     def lockMouse(self):
         pygame.mouse.set_visible(0); pygame.event.set_grab(1)
+
         
     def unlockMouse(self):
         pygame.mouse.set_visible(1); pygame.event.set_grab(0)
 
+
     def addObject(self, gameObject):
         self.objects.append(gameObject)
 
-##class Player:
-##    def __init__(self): #, pos=[1,1,1]):
-##        #self.pos = pos
-##        self.ry = 0; self.rx = 0               #####
-##        self.camera = Camera(self)
-##        self.gameObject = gameObjects[0]
-##
-##    def events(self, event):
-##        if event.type == pygame.MOUSEMOTION:
-##            x,y = event.rel; x/=200; y/=200
-##            #self.rx-=y;
-##            self.ry+=x
-##            
-##        self.camera.events(event)
-##        
-##    def move(self, delta, key):
-##        speed = delta * 5
-##
-##        x,y = speed*math.sin(self.ry), speed*math.cos(self.ry)
-##        
-##        if key[pygame.K_w]: self.pos[0]+=x; self.pos[2]+=y
-##        if key[pygame.K_s]: self.pos[0]-=x; self.pos[2]-=y
-##        if key[pygame.K_a]: self.pos[0]-=y; self.pos[2]+=x
-##        if key[pygame.K_d]: self.pos[0]+=y; self.pos[2]-=x
-##        
-##        if key[pygame.K_SPACE]: self.pos[1]+=speed
-##        if key[pygame.K_LSHIFT]: self.pos[1]-=speed
-##
-##        self.gameObject
-##
-##        # Modify position of "Player" GameObject in GameObjects
-##        # 
+
 
 class Camera:
     def __init__(self):
-        self.mode = 0 #0:first; 1:third; 2:third_extended
         self.gameObject = gameObjects[0]
         
-        self.pos = [self.gameObject.pos[0],
-                    self.gameObject.pos[1],
-                    self.gameObject.pos[2]]
+        self.pos = copy.deepcopy(self.gameObject.pos)
         
-        #self.parent = parent #gameObjects[0]
-        self.rx = 0; self.ry = 0
+        self.rot = [0,0]
+        self.update_rot()
 
     def update(self):
-        self.rx = math2.clamp(self.rx, -pi/2, pi/2)
+        self.rot[0] = math2.clamp(self.rot[0], .5*pi, 1.5*pi)
+        #print(self.rot[0])
+        
         self.pos = [self.gameObject.pos[0],
                     self.gameObject.pos[1]+1,
                     self.gameObject.pos[2]]
         
-        #print(self.gameObject.pos)
-        if self.mode == 1: #third person:
-            # beta = ry
-            d = 3
-            self.pos[0] -= d * (math.cos(self.ry)*math.cos(self.ry))
-            self.pos[1] -= d * (math.sin(self.rx)*math.cos(self.ry))
-            self.pos[2] -= d * (math.sin(self.ry))
-
-        elif self.mode == 2: #third person extended
-            d = 5
-            self.pos[0] += d * (math.cos(self.ry)*math.cos(self.ry))
-            self.pos[1] += d * (math.sin(self.rx)*math.cos(self.ry))
-            self.pos[2] += d * (math.sin(self.ry))
-
-        """ TEST FOR COLLISION: """
-
-        # NOTE:::
-        # This will only detect collide in CENTER of camera, and not entire
-        # view, as what will be preferred.
-        # This is functional, but is very much a WIP.
-##        for gameObject in gameObjects:
-##            for face in gameObject.faces:
-##                tri = face["verts"]
-##                
-##                if op.hitHoriz3dTri(self.pos, tri):
-##                    print("COLLIDED")
-
-        
+    def update_rot(self):
+        # THIS IS ONLY FOR PRE COMPUTED VALUES FOR rotate2d
+        self.rx = [math.sin(self.rot[0]), math.cos(self.rot[0])]
+        self.ry = [math.sin(self.rot[1]), math.cos(self.rot[1])]
+      
     def events(self, event):
         if event.type == pygame.MOUSEMOTION:
             x,y = event.rel; x/=200; y/=200
-            self.rx-=y; #self.ry+=x
-            self.ry+=x
-            
-        # clamp rx rotation [-pi/2,pi/2]
+            self.rot[0]+=y; self.rot[1]-=x ########################## rx was - ########################
+            self.update_rot()
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_F5:
-                
-                self.mode = (self.mode+1)%3
-        
     def move(self, delta, key):
         speed = delta * 5
 
-##        x,y = speed*math.sin(self.ry), speed*math.cos(self.ry)
-##        
-##        if key[pygame.K_w]: self.x+=x; self.z+=y
-##        if key[pygame.K_s]: self.x-=x; self.z-=y
-##        if key[pygame.K_a]: self.x-=y; self.z+=x
-##        if key[pygame.K_d]: self.x+=y; self.z-=x
-##        
-##        if key[pygame.K_SPACE]: self.y+=speed
-##        if key[pygame.K_LSHIFT]: self.y-=speed
+        if key[pygame.K_SPACE]: self.gameObject.pos[1]+=speed
+        if key[pygame.K_LSHIFT]: self.gameObject.pos[1]-=speed
         
-        x,y = speed*math.sin(self.ry), speed*math.cos(self.ry)
-        
-        if key[pygame.K_w]: self.gameObject.pos[0]+=x; self.gameObject.pos[2]+=y
-        if key[pygame.K_s]: self.gameObject.pos[0]-=x; self.gameObject.pos[2]-=y
+        x,y = speed*math.sin(self.rot[1]), speed*math.cos(self.rot[1])
+        if key[pygame.K_w]: self.gameObject.pos[0]-=x; self.gameObject.pos[2]-=y
+        if key[pygame.K_s]: self.gameObject.pos[0]+=x; self.gameObject.pos[2]+=y
         if key[pygame.K_a]: self.gameObject.pos[0]-=y; self.gameObject.pos[2]+=x
         if key[pygame.K_d]: self.gameObject.pos[0]+=y; self.gameObject.pos[2]-=x
         
-        if key[pygame.K_SPACE]: self.gameObject.pos[1]+=speed
-        if key[pygame.K_LSHIFT]: self.gameObject.pos[1]-=speed
-
 
 
 def getZ(A, B, newZ):
