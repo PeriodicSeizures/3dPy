@@ -82,6 +82,7 @@ class physics:
 
                 # Collisions are only tested between
                 # all rigidbodies, and all gameObjects
+                intersect = False
                 for gameObject in gl.gameObjects:
                     if gameObject.name!=rb.name:
                     #if gameObject != rb:
@@ -102,9 +103,11 @@ class physics:
                                                               [rb.pos[0]+n[0]/10,
                                                                rb.pos[1]+n[1]/10,
                                                                rb.pos[2]+n[2]/10]]):
-                                
-                                print("collide:",gameObject.name,rb.name)
-                                rb.velocity[0]=0;rb.velocity[1]=0;rb.velocity[2]=0
+
+                                intersect = True
+                                #print("collide:",gameObject.name,rb.name)
+                                #rb.velocity[0]=0;rb.velocity[1]=0;rb.velocity[2]=0
+                                break;
                             else:
                                 rb.pos[0] += .5*(rb.velocity[0])*delta
                                 rb.pos[1] += .5*(rb.velocity[1])*delta
@@ -113,5 +116,8 @@ class physics:
                                 if rb.useGravity:
                                     rb.velocity[1] += self.gravity*delta
 
+                        else:
+                            continue
+                        break
 
-
+                

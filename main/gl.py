@@ -72,7 +72,8 @@ def get2dVert(v,
     
     #xr = v[2]*projX
     #yr = v[2]*projY
-    #print(cx+int(v[0]/v[2]*projX), cy+int(v[1]/v[2]*projY))
+    #return cx+int(v[0]/xr), cy+int(v[1]/yr)
+    
     return cx+int(v[0]/v[2]*projX), cy+int(v[1]/v[2]*projY)
 
 
