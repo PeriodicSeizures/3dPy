@@ -95,6 +95,10 @@ class physics:
                             
                             # returns the normalized vector in order to do
                             # comparisons ...
+
+
+                            # colliders will be made up of tris
+                            # also mesh render (faces) will be made up of tris
                             n = phyMath.normalize(rb.velocity)
                             
 
