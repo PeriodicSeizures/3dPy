@@ -1,5 +1,7 @@
 # 3dPython
 
+As of the very near future, I will probably go ahead and stop uploading publicly because I plan to make this into a real epic serious game or something (in c++ of course).
+
 **Overview**
 
   3d engine baseline written in Python. Can draw triangles and triangles only (all other shapes are *garbage*). 
