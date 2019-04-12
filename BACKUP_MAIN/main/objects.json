@@ -2,12 +2,14 @@
 	{
 		"name" : "Player",
 		"isRigid" : false,
-		"pos" : [3,5,3]
+		"pos" : [3,5,3],
+		"isCollider: true
 	},
     {
 		"name" : "cradle",
 		"isRigid" : true,
 		"pos" : [2,10,2],
+	    	"isCollider" : true,
 		"faces" : 
 		[
 			{
@@ -52,6 +54,7 @@
 		"name" : "floor",
 		"isRigid" : false,
 		"pos" : [0,0,0],
+	    	"isCollider" : true, ################# should change to the box collider value
 		"faces" : 
 		[
 			{
