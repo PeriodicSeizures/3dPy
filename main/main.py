@@ -1,5 +1,4 @@
 import gl
-import math
 import pygame
 import physics
 

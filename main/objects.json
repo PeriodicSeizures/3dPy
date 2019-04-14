@@ -1,12 +1,12 @@
 [
 	{
 		"name" : "Player",
-		"isRigid" : true,
+		"isKinetic" : true,
 		"pos" : [3,5,3]
 	},
     {
 		"name" : "cradle",
-		"isRigid" : true,
+		"isKinetic" : true,
 		"pos" : [2,10,2],
 		"faces" : 
 		[
@@ -50,7 +50,7 @@
 	},
     {
 		"name" : "floor",
-		"isRigid" : false,
+		"isKinetic" : false,
 		"pos" : [0,0,0],
 		"faces" : 
 		[

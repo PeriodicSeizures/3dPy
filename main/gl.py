@@ -2,7 +2,7 @@ import pygame
 import math
 import random
 import json
-import math2
+import math2d
 import os
 import copy
 
@@ -17,19 +17,15 @@ class GameObject:
     #def __init__(self, name, pos, faces):
     def __init__(self, gameObject):
         self.name = gameObject["name"]
-        self.isRigid = gameObject["isRigid"]
         self.pos = gameObject["pos"]
         self.faces = []
-        if self.isRigid:
-            self.velocity = [0,0,0]
-            self.useGravity = True
-            self.useFriction = True
-            self.friction = .4
-            self.isKinematic = False
-            self.grounded = False
-            #self.mass = 1 # really no examples of mass used in SM 64
-            
-            
+        
+        self.isKinetic = gameObject["isKinetic"]
+        self.velocity = [0,0,0]
+        self.useGravity = True
+        self.isKinematic = False
+        self.grounded = False
+        
         if "faces" in gameObject:
             self.faces = gameObject["faces"]
             
@@ -167,7 +163,9 @@ class Renderer:
 
 class Camera:
     def __init__(self):
-        self.gameObject = gameObjects[0]
+        for o in gameObjects:
+            if o.name == "Player":
+                self.gameObject = o; break
         
         self.pos = copy.deepcopy(self.gameObject.pos)
         
@@ -175,7 +173,7 @@ class Camera:
         self.update_rot()
 
     def update(self):
-        self.rot[0] = math2.clamp(self.rot[0], .5*pi, 1.5*pi)
+        self.rot[0] = math2d.clamp(self.rot[0], .5*pi, 1.5*pi)
         #print(self.rot[0])
         
         self.pos = [self.gameObject.pos[0],
@@ -195,10 +193,15 @@ class Camera:
             self.update_rot()
 
     def move(self, delta, key):
+        print(self.gameObject.pos)
         #speed = delta * 5
-        speed = .5
+        speed = 2
 
-        if key[pygame.K_SPACE] and self.gameObject.grounded: self.gameObject.velocity[1] = .2
+        #print(self.gameObject.grounded)
+    
+        if key[pygame.K_SPACE] and self.gameObject.grounded:
+            self.gameObject.velocity[1] = 1
+            print("Jumped")
         
         x,y = speed*math.sin(self.rot[1]), speed*math.cos(self.rot[1])
         

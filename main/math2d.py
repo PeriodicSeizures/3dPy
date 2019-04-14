@@ -21,8 +21,57 @@ def clamp(var, num1, num2):
     return max(min(var, big), small)
 
 
+def intersect(line1, line2):
+    p0_x, p0_y = line1[0][0], line1[0][1]
+    p1_x, p1_y = line1[1][0], line1[1][1]
+    p2_x, p2_y = line2[0][0], line2[0][1]
+    p3_x, p3_y = line2[1][0], line2[1][1]
+
+    s1_x = p1_x - p0_x
+    s1_y = p1_y - p0_y
+    s2_x = p3_x - p2_x
+    s2_y = p3_y - p2_y
+
+    #float s, t;
+    s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y)
+    t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y)
+
+    if (s >= 0 and s <= 1 and t >= 0 and t <= 1):
+        # Collision detected
+        #if (i_x != None):
+        #x = p0_x + (t * s1_x);
+        #if (i_y != None):
+        #y = p0_y + (t * s1_y);
+        return (round(p0_x + (t * s1_x),3),
+                round(p0_y + (t * s1_y),3))
+
+    return None, None #false; # No collision
 
 
+def areaOfTri(x1, y1, x2, y2, x3, y3): 
+    return abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0) 
+
+
+def pointInTri(x1, y1, x2, y2, x3, y3, x, y): 
+    # Calculate area of triangle ABC 
+    A = areaOfTri (x1, y1, x2, y2, x3, y3)
+  
+    # Calculate area of triangle PBC  
+    A1 = areaOfTri (x, y, x2, y2, x3, y3) 
+      
+    # Calculate area of triangle PAC
+    A2 = areaOfTri (x1, y1, x, y, x3, y3) 
+      
+    # Calculate area of triangle PAB  
+    A3 = areaOfTri (x1, y1, x2, y2, x, y) 
+      
+    # Check if sum of A1, A2 and A3  
+    # is same as A 
+    if(A == A1 + A2 + A3): 
+        return True
+    else: 
+        return False
+    
 
 """
 def pointIn3dTri(point, tri):
