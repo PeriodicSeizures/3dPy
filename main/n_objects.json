@@ -1,0 +1,20 @@
+{
+
+	"floor" : 
+	{
+		
+		"pos" : [0,0,0],
+		"isRigid" : false,
+		"enableMesh" : true,
+		"enableCollision" : true
+		
+	
+	
+	}
+
+
+
+
+
+
+}

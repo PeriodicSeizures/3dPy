@@ -3,6 +3,7 @@ import copy
 import gl
 import math2 as math2
 import physicsMath as phyMath
+import numpy as np
 
 ##class rigidbody:
 ##    def __init__(self, obj, useGravity=True, useFriction=True, priority=1):  # Parameters are:
@@ -64,64 +65,83 @@ class physics:
                 
                 # In short, calculate collisions with no ratations.
                 """
-
-
-
-
-                #for _rb in gl.gameObjects:
-                #    pass
-                    
-
-                # Need to iterate every object, and test if rb collides
-                #for gameObject in gl.gameObjects:
-
-                    # Since gameObjects are made up of tris,
-
-                    # calculate a rotation created by verts in the tris
-
-
-                # Collisions are only tested between
-                # all rigidbodies, and all gameObjects
-                intersect = False
+                
                 for gameObject in gl.gameObjects:
                     if gameObject.name!=rb.name:
                     #if gameObject != rb:
                         for face in gameObject.faces:
                             tri = face["verts"]
-                            
-    ##                        for i in range(len(tri)):
-    ##                            for j in range(len(tri[i])):
-    ##                                tri[i][j] += gameObject.pos[j]
-                            
-                            # returns the normalized vector in order to do
-                            # comparisons ...
 
+                            """
 
-                            # colliders will be made up of tris
-                            # also mesh render (faces) will be made up of tris
+                                    COLLISIONS
+                            
+                            """
+                            
                             n = phyMath.normalize(rb.velocity)
                             
-
+                            if rb.useGravity and not rb.grounded:
+                                rb.velocity[1] += self.gravity*delta
+                                    
                             # If line drawn towards
-                            if phyMath.lineIntersect3dTri(tri,[rb.pos,
-                                                              [rb.pos[0]+n[0]/10,
-                                                               rb.pos[1]+n[1]/10,
-                                                               rb.pos[2]+n[2]/10]]):
+                            if phyMath.lineIntersect3dTri(tri,
+                                                          [[rb.pos[0]-n[0]/10,rb.pos[1],rb.pos[2]], # was just rb.pos, instead of list
+                                                          [rb.pos[0]+n[0]/10,
+                                                           rb.pos[1],
+                                                           rb.pos[2]]]):
+                                rb.velocity[0] = 0
 
-                                intersect = True
-                                #print("collide:",gameObject.name,rb.name)
-                                #rb.velocity[0]=0;rb.velocity[1]=0;rb.velocity[2]=0
-                                break;
+                            if phyMath.lineIntersect3dTri(tri,
+                                                          [[rb.pos[0],rb.pos[1]-n[1]/10,rb.pos[2]],
+                                                          [rb.pos[0],
+                                                           rb.pos[1]+n[1]/10,
+                                                           rb.pos[2]]]):
+                                if n[1] < 0:
+                                    grounded = True
+                                #rb.velocity[1] += delta
+                                rb.velocity[1] = math2.clamp(rb.velocity[1], 0, -rb.velocity[1])
+                                #print("Collide vertically :",rb.name)
                             else:
-                                rb.pos[0] += .5*(rb.velocity[0])*delta
-                                rb.pos[1] += .5*(rb.velocity[1])*delta
-                                rb.pos[2] += .5*(rb.velocity[2])*delta
-                                
-                                if rb.useGravity:
-                                    rb.velocity[1] += self.gravity*delta
+                                rb.grounded = False
 
-                        else:
-                            continue
-                        break
+                            if phyMath.lineIntersect3dTri(tri,
+                                                          [[rb.pos[0], rb.pos[1], rb.pos[2]-n[2]/10],
+                                                          [rb.pos[0],
+                                                           rb.pos[1],
+                                                           rb.pos[2]+n[2]/10]]):
+                                rb.velocity[2] = 0
+                            #
+                            """
 
-                
+                                    FRICTION ON GROUND
+
+                            """
+
+                            """
+                            # TEST THIS AFTER VEL MOVE
+                            if rb.grounded:
+                                if isWithin(rb.velocity[0], -.1,.1):
+                                    rb.velocity[0] = 0
+                                else:
+                                    rb.velocity[0] -= np.sign(rb.velocity[0])*delta
+
+                                if isWithin(rb.velocity[2], -.1,.1):
+                                    rb.velocity[2] = 0
+                                else:
+                                    rb.velocity[2] -= np.sign(rb.velocity[2])*delta
+
+                            """
+                            
+                """
+
+                        MOVE OBJECT BY VELOCITY
+
+                """
+                            
+                rb.pos[0] += .5*(rb.velocity[0])*delta
+                rb.pos[1] += .5*(rb.velocity[1])*delta
+                rb.pos[2] += .5*(rb.velocity[2])*delta
+
+
+
+                            

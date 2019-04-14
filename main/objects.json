@@ -1,7 +1,7 @@
 [
 	{
 		"name" : "Player",
-		"isRigid" : false,
+		"isRigid" : true,
 		"pos" : [3,5,3]
 	},
     {

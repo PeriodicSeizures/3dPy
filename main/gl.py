@@ -26,6 +26,7 @@ class GameObject:
             self.useFriction = True
             self.friction = .4
             self.isKinematic = False
+            self.grounded = False
             #self.mass = 1 # really no examples of mass used in SM 64
             
             
@@ -180,6 +181,7 @@ class Camera:
         self.pos = [self.gameObject.pos[0],
                     self.gameObject.pos[1]+1,
                     self.gameObject.pos[2]]
+        #print(self.gameObject.velocity[1])
         
     def update_rot(self):
         # THIS IS ONLY FOR PRE COMPUTED VALUES FOR rotate2d
@@ -193,8 +195,19 @@ class Camera:
             self.update_rot()
 
     def move(self, delta, key):
-        speed = delta * 5
+        #speed = delta * 5
+        speed = .5
 
+        if key[pygame.K_SPACE] and self.gameObject.grounded: self.gameObject.velocity[1] = .2
+        
+        x,y = speed*math.sin(self.rot[1]), speed*math.cos(self.rot[1])
+        
+        if key[pygame.K_w]: self.gameObject.velocity[0]=-x; self.gameObject.velocity[2]=-y
+        if key[pygame.K_s]: self.gameObject.velocity[0]=x;  self.gameObject.velocity[2]=y
+        if key[pygame.K_a]: self.gameObject.velocity[0]=-y; self.gameObject.velocity[2]=x
+        if key[pygame.K_d]: self.gameObject.velocity[0]=y;  self.gameObject.velocity[2]=-x
+
+        """
         if key[pygame.K_SPACE]: self.gameObject.pos[1]+=speed
         if key[pygame.K_LSHIFT]: self.gameObject.pos[1]-=speed
         
@@ -203,6 +216,7 @@ class Camera:
         if key[pygame.K_s]: self.gameObject.pos[0]+=x; self.gameObject.pos[2]+=y
         if key[pygame.K_a]: self.gameObject.pos[0]-=y; self.gameObject.pos[2]+=x
         if key[pygame.K_d]: self.gameObject.pos[0]+=y; self.gameObject.pos[2]-=x
+        """
         
 
 

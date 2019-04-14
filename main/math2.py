@@ -14,8 +14,11 @@ def isOutside(val, _min, _max):
     return False
 
 
-def clamp(num, small, big):
-    return max(min(num, big), small)
+def clamp(var, num1, num2):
+    small = min(num1,num2)
+    big = max(num1,num2)
+    
+    return max(min(var, big), small)
 
 
 
