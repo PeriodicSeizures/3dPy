@@ -7,16 +7,16 @@ clock = pygame.time.Clock()
 
 game = gl.Renderer(800, 600)
 camera = gl.Camera()
-#player = gl.Player([1,1,1])
 physix = physics.physics()
 
 focus = True
+fixedUpdateTime = 0
 
 game.lockMouse()
 
 run = True
 while(run):
-    delta = clock.tick()/1000
+    delta = clock.tick()/1000   # time it took last frame
 
     # Events
     for event in pygame.event.get():
@@ -43,10 +43,34 @@ while(run):
         # are player specific
         
         key = pygame.key.get_pressed()
-        physix.update(delta)
         
         camera.move(delta, key)
         camera.update()
 
-        game.render(clock, delta, camera)#player.camera)
         
+        
+    """
+    
+            FIXED UPDATES
+    
+    """
+    
+    if fixedUpdateTime>=.0166666:
+        physix.fixedUpdate(delta)
+        
+        
+        # Draw after everything else
+        game.render(clock, camera)   # player.camera
+        fixedUpdateTime=0
+    
+        """
+        .0100   100 t/s
+        .0166    60 tps
+        .0333    30 t/s
+        .1000    10 t/s
+        
+        
+        """
+    
+    fixedUpdateTime+=delta
+    
