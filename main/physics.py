@@ -147,13 +147,25 @@ class physics:
 
                     """
 
-                    if o1.velocity[0]!=0:
-                        o1.pos[0] += .5*(o1.velocity[0])*delta
-                    if o1.velocity[1]!=0:
-                        o1.pos[1] += .5*(o1.velocity[1])*delta
-                    if o1.velocity[2]!=0:
-                        o1.pos[2] += .5*(o1.velocity[2])*delta
+                    """
+                    
+                    Need a fixed TimeStep :
+                    
+                    what happens here:
+                    velocity is updated per pc call,
+                    velocity step is scaled based on delta
+                    
+                    Should put in deltaUpdate()
+                    
+                    """
+    def fixedUpdate(self, delta):
+        #update velocity on fixed timestep:
+        
+        if o1.velocity[0]!=0:
+            o1.pos[0] += .5*(o1.velocity[0])*delta
+        if o1.velocity[1]!=0:
+            o1.pos[1] += .5*(o1.velocity[1])*delta
+        if o1.velocity[2]!=0:
+            o1.pos[2] += .5*(o1.velocity[2])*delta
 
-
-
-                            
+                        
