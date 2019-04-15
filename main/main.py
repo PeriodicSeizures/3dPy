@@ -61,17 +61,9 @@ while(run):
         
         
         # Draw after everything else
-        game.render(clock, delta, camera)   # player.camera
+        game.render(camera)
         fixedUpdateTime=0
     
-        """
-        .0100   100 t/s
-        .0166    60 tps
-        .0333    30 t/s
-        .1000    10 t/s
-        
-        
-        """
     
     fixedUpdateTime+=delta
     

@@ -95,7 +95,7 @@ class Renderer:
         self.display = pygame.display.set_mode((w,h))
 
 
-    def render(self, clock, delta, caster):
+    def render(self, caster):
         # clear screen before draw
         #print(delta)
         self.display.fill((255,255,255))

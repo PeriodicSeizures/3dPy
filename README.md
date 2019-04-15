@@ -46,7 +46,9 @@ As of the very near future, I will probably go ahead and stop uploading publicly
 
     esc / top-right X : exit
 
-![image](physicsCalculations.png?raw=true "img")
+![image0](controller.png?raw=true "img0")
+
+![image1](physicsCalculations.png?raw=true "img1")
 
 **To Do:**
   
