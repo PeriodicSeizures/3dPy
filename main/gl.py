@@ -82,7 +82,6 @@ class Renderer:
     def __init__(self, w, h):
         
         pygame.event.get(); pygame.mouse.get_rel()
-        self.currentInterval = 0
 
         self.fov = 90/180*math.pi; self.half_fov = self.fov/2
         self.half_w, self.half_h = w/2,h/2
@@ -96,8 +95,9 @@ class Renderer:
         self.display = pygame.display.set_mode((w,h))
 
 
-    def render(self, clock, caster):
+    def render(self, clock, delta, caster):
         # clear screen before draw
+        #print(delta)
         self.display.fill((255,255,255))
         
         for gameObject in gameObjects:
@@ -140,11 +140,6 @@ class Renderer:
                         pygame.draw.polygon(self.display, (0, 127, 50), verts2d)
                     except: pass
 
-        self.currentInterval+=delta
-        if self.currentInterval>=1:
-            self.currentInterval=0
-            pygame.display.set_caption("3dTriEngine | %.00f fps" % (clock.get_fps()))
-
         pygame.display.flip()
 
 
@@ -180,6 +175,7 @@ class Camera:
                     self.gameObject.pos[1]+1,
                     self.gameObject.pos[2]]
         #print(self.gameObject.velocity[1])
+        #print(self.gameObject.grounded)
         
     def update_rot(self):
         # THIS IS ONLY FOR PRE COMPUTED VALUES FOR rotate2d

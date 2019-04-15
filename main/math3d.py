@@ -90,7 +90,7 @@ def pointInTri(x1,y1,z1,    # P
 
 def normalize(vector):
     if vector[0]==0 and vector[1]==0 and vector[2]==0:
-        return -1
+        return 0
     
     d = dist([0,0,0], vector)
     v = [vector[0]/d, vector[1]/d, vector[2]/d]

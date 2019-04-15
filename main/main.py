@@ -15,6 +15,7 @@ fixedUpdateTime = 0
 game.lockMouse()
 
 run = True
+fpsInterval = 0
 while(run):
     delta = clock.tick()/1000   # time it took last frame
 
@@ -60,7 +61,7 @@ while(run):
         
         
         # Draw after everything else
-        game.render(clock, camera)   # player.camera
+        game.render(clock, delta, camera)   # player.camera
         fixedUpdateTime=0
     
         """
@@ -74,3 +75,10 @@ while(run):
     
     fixedUpdateTime+=delta
     
+    
+    fpsInterval+=delta
+    print("this is being printed to simulate lagg")
+    if fpsInterval>=1:
+        #print("disp")
+        fpsInterval=0
+        pygame.display.set_caption("3dTriEngine | %.00f fps" % (clock.get_fps()))
