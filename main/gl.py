@@ -96,7 +96,7 @@ class Renderer:
         self.display = pygame.display.set_mode((w,h))
 
 
-    def render(self, clock, delta, caster):
+    def render(self, clock, caster):
         # clear screen before draw
         self.display.fill((255,255,255))
         
@@ -209,19 +209,7 @@ class Camera:
         if key[pygame.K_s]: self.gameObject.velocity[0]=x;  self.gameObject.velocity[2]=y
         if key[pygame.K_a]: self.gameObject.velocity[0]=-y; self.gameObject.velocity[2]=x
         if key[pygame.K_d]: self.gameObject.velocity[0]=y;  self.gameObject.velocity[2]=-x
-
-        """
-        if key[pygame.K_SPACE]: self.gameObject.pos[1]+=speed
-        if key[pygame.K_LSHIFT]: self.gameObject.pos[1]-=speed
-        
-        x,y = speed*math.sin(self.rot[1]), speed*math.cos(self.rot[1])
-        if key[pygame.K_w]: self.gameObject.pos[0]-=x; self.gameObject.pos[2]-=y
-        if key[pygame.K_s]: self.gameObject.pos[0]+=x; self.gameObject.pos[2]+=y
-        if key[pygame.K_a]: self.gameObject.pos[0]-=y; self.gameObject.pos[2]+=x
-        if key[pygame.K_d]: self.gameObject.pos[0]+=y; self.gameObject.pos[2]-=x
-        """
-        
-
+            
 
 def getZ(A, B, newZ):
     if B[2]==A[2] or newZ<A[2] or newZ>B[2]: return None
