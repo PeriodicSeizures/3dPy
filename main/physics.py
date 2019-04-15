@@ -10,10 +10,27 @@ class physics:
     def __init__(self):
         self.gravity = -1
         self.isActive = True
-                            
-    def update(self, delta):
+    
+    
+    
+    """
+    
+    
+        The issue here is that when objects have more faces, it takes longer to calculate collision,
+        
+        and then the move-velocity is delayed by that time?
+        
+        
+        Need to get a new delta after loop to maintain timestep
+    
+    
+    """
+    
+    def fixedUpdate(self, clock):
+        
         if self.isActive:
             for o1 in gl.gameObjects:
+                
 
 
 
@@ -33,14 +50,14 @@ class physics:
                     """
                     
                     if o1.useGravity:
-                        o1.velocity[1] += self.gravity*delta
+                        o1.velocity[1] += self.gravity*(clock.tick()/1000)
 
 
 
 
                     """
 
-                    CHECK FOR COLLISIONS
+                    CHECK FOR COLLISIONS, Time will vary
 
                     """
                     
@@ -55,6 +72,16 @@ class physics:
                                     tri[v][1] += y
                                     tri[v][2] += z
                                    
+                                """
+                                
+                                    Lossy Collision detection
+                                    
+                                        loss of precision of area comparison in order to detect apprx. collision
+                                        
+                                            (A pt. will never be exactly in a plane)
+                                
+                                """
+                                
                                 if o1.velocity[0]!=0:
                                     if math3d.pointInTri(x+n[0]/10, y, z,
                                                          tri[0][0],tri[0][1],tri[0][2],
@@ -86,42 +113,11 @@ class physics:
                                         
                                         o1.velocity[2] = 0 #math2d.clamp(o1.velocity[2], 0, -o1.velocity[2])
 
-
-
-                                """
-                                if math3d.lineXTriPlane(tri,
-                                                              [[x-n[0]/10, y, z], # was just rb.pos, instead of list
-                                                              [x+n[0]/10, y, z]]):
-                                    o1.velocity[0] = math2d.clamp(o1.velocity[0], 0, -o1.velocity[0])
-
-                                    
-
-                                if math3d.lineXTriPlane(tri,
-                                                              [[x, y-n[1]/10, z],
-                                                              [x, y+n[1]/10, z]]):
-                                    if n[1] < 0:
-                                        o1.grounded = True
-                                    else:
-                                        o1.grounded = False
-                                    
-                                    o1.velocity[1] = math2d.clamp(o1.velocity[1], 0, -o1.velocity[1])
-
-
-                                else:
-                                    o1.grounded = False
-
-                                if math3d.lineXTriPlane(tri,
-                                                              [[x, y, z-n[2]/10],
-                                                              [x, y, z+n[2]/10]]):
-                                    o1.velocity[2] = math2d.clamp(o1.velocity[2], 0, -o1.velocity[2])
-
-                                """
-
-
-
                                 """
 
                                         FRICTION ON GROUND
+                                        
+                                            might or might not work currently
 
                                 """
 
@@ -140,32 +136,18 @@ class physics:
                                 """
 
 
-                            
-                    """
 
-                            MOVE OBJECT BY VELOCITY
+                """
 
-                    """
+                        MOVE OBJECT BY VELOCITY
 
-                    """
-                    
-                    Need a fixed TimeStep :
-                    
-                    what happens here:
-                    velocity is updated per pc call,
-                    velocity step is scaled based on delta
-                    
-                    Should put in deltaUpdate()
-                    
-                    """
-    def fixedUpdate(self, delta):
-        #update velocity on fixed timestep:
+                """
         
-        if o1.velocity[0]!=0:
-            o1.pos[0] += .5*(o1.velocity[0])*delta
-        if o1.velocity[1]!=0:
-            o1.pos[1] += .5*(o1.velocity[1])*delta
-        if o1.velocity[2]!=0:
-            o1.pos[2] += .5*(o1.velocity[2])*delta
+                if o1.velocity[0]!=0:
+                    o1.pos[0] += .5*(o1.velocity[0])*(clock.tick()/1000)
+                if o1.velocity[1]!=0:
+                    o1.pos[1] += .5*(o1.velocity[1])*(clock.tick()/1000)
+                if o1.velocity[2]!=0:
+                    o1.pos[2] += .5*(o1.velocity[2])*(clock.tick()/1000)
 
                         
