@@ -4,6 +4,12 @@ As of the very near future, I will probably go ahead and stop uploading publicly
 
 **Overview**
 
+  Issues:
+    Timesteps need to be functional in physics
+    
+    
+    
+
   3d engine baseline written in Python. Can draw triangles and triangles only (all other shapes are *garbage*). 
   
   Physics in works
