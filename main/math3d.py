@@ -76,10 +76,8 @@ def pointInTri(x1,y1,z1,    # P
     APC = areaOfTri([x2,y2,z2],[x1,y1,z1],[x4,y4,z4])
     BPC = areaOfTri([x3,y3,z3],[x1,y1,z1],[x4,y4,z4])
 
-    sum = round(APB+APC+BPC,3)
-    ABC = round(ABC,3)
-
-    print(sum,ABC)
+    sum = round(APB+APC+BPC,1) # precise up to 5 digits
+    ABC = round(ABC,1)
 
     if sum == ABC:
         return True
@@ -92,7 +90,7 @@ def pointInTri(x1,y1,z1,    # P
 
 def normalize(vector):
     if vector[0]==0 and vector[1]==0 and vector[2]==0:
-        return [0,0,0]
+        return -1
     
     d = dist([0,0,0], vector)
     v = [vector[0]/d, vector[1]/d, vector[2]/d]

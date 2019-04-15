@@ -2,6 +2,7 @@
 	{
 		"name" : "Player",
 		"isKinetic" : true,
+		"color" : "0xFF0000",
 		"pos" : [3,5,3]
 	},
     {

@@ -193,7 +193,7 @@ class Camera:
             self.update_rot()
 
     def move(self, delta, key):
-        print(self.gameObject.pos)
+        #print(self.gameObject.pos)
         #speed = delta * 5
         speed = 2
 
@@ -201,7 +201,7 @@ class Camera:
     
         if key[pygame.K_SPACE] and self.gameObject.grounded:
             self.gameObject.velocity[1] = 1
-            print("Jumped")
+            #print("Jumped")
         
         x,y = speed*math.sin(self.rot[1]), speed*math.cos(self.rot[1])
         

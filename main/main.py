@@ -43,8 +43,10 @@ while(run):
         # are player specific
         
         key = pygame.key.get_pressed()
+        physix.update(delta)
+        
         camera.move(delta, key)
         camera.update()
 
         game.render(clock, delta, camera)#player.camera)
-        physix.update(delta)
+        
