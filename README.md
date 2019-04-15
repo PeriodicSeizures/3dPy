@@ -4,8 +4,26 @@ As of the very near future, I will probably go ahead and stop uploading publicly
 
 **Overview**
 
-  Issues:
-    Timesteps need to be functional in physics
+  *Issues*:
+  
+    Timesteps need to be functional in physics (Already added, but test)
+    
+    Movement of player needs to be removed reworked... (put somewhere more effective, should not be in camera)
+    put movement into a main update, not in cmera, because:
+    
+      Camera only renders based on its position...
+      
+    OR::::::::
+    
+      Merge RENDERER and CAMERA so that camera will render onto window
+      
+      Create separate object for player, and dont store as a vague object in objects.json
+      
+      Move camera from in player (Player will move camera)
+      
+      Put drawing window stuff ONLY in gl.py (including future camera and window_RENDERER)
+      
+      
     
     
     
