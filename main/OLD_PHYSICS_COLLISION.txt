@@ -1,0 +1,31 @@
+
+
+                                """
+                                if math3d.lineXTriPlane(tri,
+                                                              [[x-n[0]/10, y, z], # was just rb.pos, instead of list
+                                                              [x+n[0]/10, y, z]]):
+                                    o1.velocity[0] = math2d.clamp(o1.velocity[0], 0, -o1.velocity[0])
+
+                                    
+
+                                if math3d.lineXTriPlane(tri,
+                                                              [[x, y-n[1]/10, z],
+                                                              [x, y+n[1]/10, z]]):
+                                    if n[1] < 0:
+                                        o1.grounded = True
+                                    else:
+                                        o1.grounded = False
+                                    
+                                    o1.velocity[1] = math2d.clamp(o1.velocity[1], 0, -o1.velocity[1])
+
+
+                                else:
+                                    o1.grounded = False
+
+                                if math3d.lineXTriPlane(tri,
+                                                              [[x, y, z-n[2]/10],
+                                                              [x, y, z+n[2]/10]]):
+                                    o1.velocity[2] = math2d.clamp(o1.velocity[2], 0, -o1.velocity[2])
+
+                                """
+
