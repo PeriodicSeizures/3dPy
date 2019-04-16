@@ -61,7 +61,7 @@ class physics:
                     """
                     
                     for o2 in gl.gameObjects:
-                        if o1.name != o2.name:
+                        if not o1 is o2:
                        
                             for face in o2.faces:
                                 tri = copy.deepcopy(face["verts"])

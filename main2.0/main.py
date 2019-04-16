@@ -2,44 +2,84 @@ import gl
 import pygame
 #import physics
 import objects as objs
+import copy
+import math
 
 class Player:
     def __init__(self):
         self.pos = [0,0,0]
         
         self.rot = [0,0]
-		
+
+        self.meshFaces = []
         self.colliderFaces = []
         
-        self.isKinetic = True
+        self.isKinetic = False
         self.velocity = [0,0,0]
         self.useGravity = True
         self.grounded = False
 
     def update(self):
         #key = pygame.key.get_pressed()
-        if self.isKinetic:
-            move(self, pygame.key.get_pressed())
+        self.move(pygame.key.get_pressed())
 
     def events(self, event):
         if event.type == pygame.MOUSEMOTION:
             x,y = event.rel; x/=200; y/=200
-            game.rot[0]+=y; game.rot[1]-=x ########################## rx was - ########################
+            game.rot[0]+=y; game.rot[1]+=x ### ry was - ########
 	
     def move(self, key):
         #speed = delta * 5
         speed = 2
     
-        if key[pygame.K_SPACE] and self.grounded:
-            self.velocity[1] = 3
-            self.grounded = False
         
-        x,y = speed*math.sin(self.rot[1]), speed*math.cos(self.rot[1])
+
+        """
+
+            MOVE PLAYER:
+
+        """
+
         
-        if key[pygame.K_w]: self.velocity[0]=-x; self.velocity[2]=-y
-        if key[pygame.K_s]: self.velocity[0]=x;  self.velocity[2]=y
-        if key[pygame.K_a]: self.velocity[0]=-y; self.velocity[2]=x
-        if key[pygame.K_d]: self.velocity[0]=y;  self.velocity[2]=-x
+        if self.isKinetic:
+            x,y = speed*math.sin(self.rot[1]), speed*math.cos(self.rot[1])
+            # by physics
+            if key[pygame.K_SPACE] and self.grounded:
+                self.pos[1] = 3
+                self.grounded = False
+                
+            if key[pygame.K_w]: self.velocity[0]=-x; self.velocity[2]=-y
+            if key[pygame.K_s]: self.velocity[0]=x;  self.velocity[2]=y
+            if key[pygame.K_a]: self.velocity[0]=-y; self.velocity[2]=x
+            if key[pygame.K_d]: self.velocity[0]=y;  self.velocity[2]=-x
+        else:
+            print("moving")
+            x,y = speed*math.sin(self.rot[1])*delta, speed*math.cos(self.rot[1])*delta
+            # by position
+            if key[pygame.K_SPACE] and self.grounded:
+                self.pos[1] += delta*speed
+                self.grounded = False
+                
+            if key[pygame.K_w]: self.pos[0]-=x; self.pos[2]-=y
+            if key[pygame.K_s]: self.pos[0]+=x;  self.pos[2]+=y
+            if key[pygame.K_a]: self.pos[0]-=y; self.pos[2]+=x
+            if key[pygame.K_d]: self.pos[0]+=y;  self.pos[2]-=x
+
+        """
+
+            MOVE CAMERA by player
+
+        """
+
+        game.pos = copy.deepcopy(self.pos)
+
+        """
+
+            ROTATE PLAYER by camera
+
+        """
+
+        self.rot = copy.deepcopy(game.rot)
 
 
 
@@ -89,7 +129,7 @@ while(run):
             player.events(event)
             #player.events(event)
 
-    if fixedUpdateTime>=.0166666:
+    if fixedUpdateTime>=.01333333: # 60 tps
         #physix.fixedUpdate(delta, objs.objects)
         game.update(objs.objects)
         fixedUpdateTime=0
@@ -97,7 +137,7 @@ while(run):
     
     fixedUpdateTime+=delta
     
-    
+    player.update()
     fpsInterval+=delta
     #print("this is being printed to simulate lagg")
     if fpsInterval>=1:

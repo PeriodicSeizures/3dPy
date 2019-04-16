@@ -36,7 +36,7 @@ def get2dVert(v,
     #xr = v[2]*projX
     #yr = v[2]*projY
     #return cx+int(v[0]/xr), cy+int(v[1]/yr)
-
+    """
     try:
         x = cx+int(v[0]/v[2]*projX)
     except:
@@ -48,6 +48,9 @@ def get2dVert(v,
         y = 10000
     
     return x, y
+    """
+    
+    return cx+int(v[0]/v[2]*projX), cy+int(v[1]/v[2]*projY)
 
 
 
@@ -75,54 +78,53 @@ class Renderer:
 		
     def update(self, gameObjects): 
 	
-        self.rot[0] = math2d.clamp(self.rot[0], .5*pi, 1.5*pi)
-		
+        self.rot[0] = math2d.clamp(self.rot[0], 0, pi) #.5*pi, 1.5*pi)
+	
         # Background color
         self.display.fill((255,255,255))
         
         for gameObject in gameObjects:
-            if isinstance(gameObject, objs.Object):
-                if gameObject.meshFaces:
+            if gameObject.meshFaces:
+                
+                for face in gameObject.meshFaces:
                     
-                    for face in gameObject.meshFaces:
-                                    
-                        verts3d = [get3dVert(vert, self.pos, self.rot, gameObject.pos) for vert in face["verts"]]
-                                            
-                        i=0
-                        while i<len(verts3d):
+                    verts3d = [get3dVert(vert, self.pos, self.rot, gameObject.pos) for vert in face["verts"]]
+                    
+                    i=0
+                    while i<len(verts3d):
+                        
+                        # if clipping
+                        if verts3d[i][2] < 0:
+                            sides=[]
+
+                            # left vert
+                            left = verts3d[i-1]
+
+                            # right vert
+                            right = verts3d[(i+1) % len(verts3d)]
+
+                            # if left vert is not clipping
+                            if left[2]>=minZ:
+                                sides += [getZ(verts3d[i],left,minZ)]
+
+                            # if right vert is not clipping
+                            if right[2]>=minZ:
+                                sides += [getZ(verts3d[i],right,minZ)]
+                            verts3d = verts3d[:i]+sides+verts3d[i+1:]
+                            i+=len(sides)-1;
+                        i+=1
+
+                    if verts3d:
+                        verts2d=[]
+                        for vert in verts3d:
+                            verts2d.append(get2dVert(vert,
+                                                     self.cx, self.cy,
+                                                     self.projX, self.projY))
                             
-                            # if clipping
-                            if verts3d[i][2] < 0:
-                                sides=[]
-
-                                # left vert
-                                left = verts3d[i-1]
-
-                                # right vert
-                                right = verts3d[(i+1) % len(verts3d)]
-
-                                # if left vert is not clipping
-                                if left[2]>=minZ:
-                                    sides += [getZ(verts3d[i],left,minZ)]
-
-                                # if right vert is not clipping
-                                if right[2]>=minZ:
-                                    sides += [getZ(verts3d[i],right,minZ)]
-                                verts3d = verts3d[:i]+sides+verts3d[i+1:]
-                                i+=len(sides)-1;
-                            i+=1
-
-                        if verts3d:
-                            verts2d=[]
-                            for vert in verts3d:
-                                verts2d.append(get2dVert(vert,
-                                                         self.cx, self.cy,
-                                                         self.projX, self.projY))
-                                
-                        try:
-                            color = pygame.Color(face["color"])
-                            pygame.draw.polygon(self.display, color, verts2d)
-                        except: pass
+                    try:
+                        color = pygame.Color(face["color"])
+                        pygame.draw.polygon(self.display, color, verts2d)
+                    except: pass
 
         pygame.display.flip()
 
