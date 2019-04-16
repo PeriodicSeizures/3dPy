@@ -6,11 +6,23 @@ import objects as objs
 
 pi = math.pi
 
+"""
+
+    Rotate a pt around
+
+"""
+
+def rotate2d(pos, rot): # new rotation is a float in radians for rotation
+    x,y = pos
+    s,c = math.sin(rot), math.cos(rot)
+    return round(x*c+y*s,2), round(y*c+x*s,2)
+
+"""
 def rotate2d(pos, rot):
     x,y = pos
     s,c = rot #math.sin(rot), math.cos(rot)
     return x*c-y*s, y*c+x*s
-
+"""
 
 
 def get3dVert(vertex, originPos, originRot, targetPos):
@@ -18,12 +30,14 @@ def get3dVert(vertex, originPos, originRot, targetPos):
     x = vertex[0]-originPos[0]+targetPos[0]
     y = vertex[1]-originPos[1]+targetPos[1]
     z = vertex[2]-originPos[2]+targetPos[2]
-    
+	
+    """
     rx = [math.sin(originRot[0]), math.cos(originRot[0])]
     ry = [math.sin(originRot[1]), math.cos(originRot[1])]
+    """
 
-    x,z = rotate2d([x,z], ry) #ry
-    y,z = rotate2d([y,z], rx) #rx
+    x,z = rotate2d([x,z], originRot[0]) #ry
+    y,z = rotate2d([y,z], originRot[1]) #rx
 
     return [x,y,z]
 
@@ -56,6 +70,15 @@ def get2dVert(v,
 
 minZ = .1
 
+
+"""
+
+    Rendering possible:
+        clamp - ok.
+	auto trig get2dVert - ok?
+	
+
+"""
 
 class Renderer:
     def __init__(self, w, h):
