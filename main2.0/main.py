@@ -1,18 +1,30 @@
 import gl
 import pygame
-import physics
+#import physics
+import objects as objs
 
 class Player:
-    def __init__(self):        
+    def __init__(self):
         self.pos = [0,0,0]
         
         self.rot = [0,0]
-        self.update_rot()
+		
+        self.colliderFaces = []
+        
+        self.isKinetic = True
+        self.velocity = [0,0,0]
+        self.useGravity = True
+        self.grounded = False
 
     def update(self):
         #key = pygame.key.get_pressed()
-		if self.isKinetic:
-			move(self, pygame.key.get_pressed())
+        if self.isKinetic:
+            move(self, pygame.key.get_pressed())
+
+    def events(self, event):
+        if event.type == pygame.MOUSEMOTION:
+            x,y = event.rel; x/=200; y/=200
+            game.rot[0]+=y; game.rot[1]-=x ########################## rx was - ########################
 	
     def move(self, key):
         #speed = delta * 5
@@ -20,6 +32,7 @@ class Player:
     
         if key[pygame.K_SPACE] and self.grounded:
             self.velocity[1] = 3
+            self.grounded = False
         
         x,y = speed*math.sin(self.rot[1]), speed*math.cos(self.rot[1])
         
@@ -28,25 +41,28 @@ class Player:
         if key[pygame.K_a]: self.velocity[0]=-y; self.velocity[2]=x
         if key[pygame.K_d]: self.velocity[0]=y;  self.velocity[2]=-x
 
+
+
 pygame.init()
 clock = pygame.time.Clock()
 
 game = gl.Renderer(800, 600)
-physix = physics.physics()
+#physix = physics.physics()
 player = Player()
-
 
 focus = True
 fixedUpdateTime = 0
 
+objs.objects.append(player)
+
 def lockMouse():
-	pygame.event.get(); pygame.mouse.get_rel()
-	pygame.mouse.set_visible(0); pygame.event.set_grab(1)
+    pygame.event.get(); pygame.mouse.get_rel()
+    pygame.mouse.set_visible(0); pygame.event.set_grab(1)
 
 	
 def unlockMouse():
-	pygame.event.get(); pygame.mouse.get_rel()
-	pygame.mouse.set_visible(1); pygame.event.set_grab(0)
+    pygame.event.get(); pygame.mouse.get_rel()
+    pygame.mouse.set_visible(1); pygame.event.set_grab(0)
 
 lockMouse()
 
@@ -64,48 +80,18 @@ while(run):
             
             if event.key == pygame.K_f:
                 if focus:
-                    game.unlockMouse()
+                    unlockMouse()
                 else:
-                    game.lockMouse()
+                    lockMouse()
                 focus = not focus
             #player.camera.events()
         if focus:
-            camera.events(event)
+            player.events(event)
             #player.events(event)
 
-    # Updates/mEvents:
-    if run:
-        #player.move(delta, key)
-        # Just move all key events for testing into Player loop if
-        # are player specific
-		
-		"""
-		
-			MOVE PLAYER in separate fn or something...
-			
-			first, need to reimplement those methods\s...
-		
-			JUST UPDATE PLAYER PER UPDATE()
-		
-		"""
-        
-		
-        camera.update()
-
-        
-        
-    """
-    
-            FIXED UPDATES
-    
-    """
-    
     if fixedUpdateTime>=.0166666:
-        physix.fixedUpdate(delta)
-        
-        
-        # Draw after everything else
-        game.render(camera)
+        #physix.fixedUpdate(delta, objs.objects)
+        game.update(objs.objects)
         fixedUpdateTime=0
     
     
@@ -113,7 +99,7 @@ while(run):
     
     
     fpsInterval+=delta
-    print("this is being printed to simulate lagg")
+    #print("this is being printed to simulate lagg")
     if fpsInterval>=1:
         #print("disp")
         fpsInterval=0
