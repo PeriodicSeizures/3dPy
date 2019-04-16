@@ -36,9 +36,7 @@ class Player:
         
 
         """
-
             MOVE PLAYER:
-
         """
 
         if self.isKinetic: # if physics enabled on object
@@ -65,19 +63,15 @@ class Player:
             if key[pygame.K_d]: self.pos[0]+=y;  self.pos[2]-=x
 
         """
-
             MOVE CAMERA from Player
-
         """
 
         game.pos = copy.deepcopy(self.pos)
 
         """
-
             ROTATE PLAYER from Renderer
 	    
 	    should be changed to when camera rotated enough, and relative rotation is far enough, then rotate player
-
         """
 
         self.rot = copy.deepcopy(game.rot)
@@ -144,4 +138,4 @@ while(run):
     if fpsInterval>=1:
         #print("disp")
         fpsInterval=0
-        pygame.display.set_caption("Game engine | %i fps" % int((clock.get_fps())))
+        pygame.display.set_caption("Game engine | %.00f fps" % (clock.get_fps()))
