@@ -13,7 +13,7 @@ pi = math.pi
 def rotate2d(pos, rot): # new rotation is a float in radians for rotation
     x,y = pos
     s,c = math.sin(rot), math.cos(rot)
-    return round(x*c+y*s,2), round(y*c+x*s,2)
+    return round(x*c-y*s,2), round(y*c+x*s,2)
 
 """
 def rotate2d(pos, rot):
