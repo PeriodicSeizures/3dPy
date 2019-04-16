@@ -7,9 +7,7 @@ import objects as objs
 pi = math.pi
 
 """
-
     Rotate a pt around
-
 """
 
 def rotate2d(pos, rot): # new rotation is a float in radians for rotation
@@ -50,21 +48,19 @@ def get2dVert(v,
     #xr = v[2]*projX
     #yr = v[2]*projY
     #return cx+int(v[0]/xr), cy+int(v[1]/yr)
-    """
-    try:
-        x = cx+int(v[0]/v[2]*projX)
-    except:
-        x = 10000
-
-    try:
-        y = cy+int(v[1]/v[2]*projY)
-    except:
-        y = 10000
+    
+    if v[2]!=0:
+      #print(v[2])
+      x = cx+int(v[0]/v[2]*projX)
+      y = cy+int(v[1]/v[2]*projY)
+    else:
+      x = 10000
+      y = 10000
     
     return x, y
-    """
     
-    return cx+int(v[0]/v[2]*projX), cy+int(v[1]/v[2]*projY)
+    
+    #return cx+int(v[0]/v[2]*projX), cy+int(v[1]/v[2]*projY)
 
 
 
@@ -72,12 +68,10 @@ minZ = .1
 
 
 """
-
     Rendering possible:
         clamp - ok.
 	auto trig get2dVert - ok?
 	
-
 """
 
 class Renderer:
