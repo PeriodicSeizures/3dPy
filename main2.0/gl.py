@@ -25,6 +25,7 @@ def rotate2d(pos, rot):
 
 def get3dVert(vertex, originPos, originRot, targetPos):
     # WAS - FOR x,y,z
+    # translate vert based on its position
     x = vertex[0]-originPos[0]+targetPos[0]
     y = vertex[1]-originPos[1]+targetPos[1]
     z = vertex[2]-originPos[2]+targetPos[2]
@@ -34,8 +35,8 @@ def get3dVert(vertex, originPos, originRot, targetPos):
     ry = [math.sin(originRot[1]), math.cos(originRot[1])]
     """
 
-    x,z = rotate2d([x,z], originRot[0]) #ry
-    y,z = rotate2d([y,z], originRot[1]) #rx
+    x,z = rotate2d([x,z], originRot[1]) #ry
+    y,z = rotate2d([y,z], originRot[0]) #rx
 
     return [x,y,z]
 

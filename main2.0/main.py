@@ -22,6 +22,7 @@ class Player:
     def update(self):
         #key = pygame.key.get_pressed()
         self.move(pygame.key.get_pressed())
+        print(self.pos)
 
     def events(self, event):
         if event.type == pygame.MOUSEMOTION:
@@ -53,9 +54,9 @@ class Player:
         else: # if physics disabled on object
             x,y = speed*math.sin(self.rot[1])*delta, speed*math.cos(self.rot[1])*delta
             # by position
-            if key[pygame.K_SPACE] and self.grounded:
-                self.pos[1] += delta*speed
-                self.grounded = False
+            if key[pygame.K_SPACE]: self.pos[1] += delta*speed
+            if key[pygame.K_LSHIFT]: self.pos[1] -= delta*speed
+           
                 
             if key[pygame.K_w]: self.pos[0]-=x; self.pos[2]-=y
             if key[pygame.K_s]: self.pos[0]+=x;  self.pos[2]+=y
