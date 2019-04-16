@@ -25,8 +25,9 @@ class Player:
 
     def events(self, event):
         if event.type == pygame.MOUSEMOTION:
+            # scales translation of mouse to camera rotation
             x,y = event.rel; x/=200; y/=200
-            game.rot[0]+=y; game.rot[1]+=x ### ry was - ########
+            game.rot[0]+=y; game.rot[1]+=x ### ry was (-) ###
 	
     def move(self, key):
         #speed = delta * 5
@@ -40,8 +41,7 @@ class Player:
 
         """
 
-        
-        if self.isKinetic:
+        if self.isKinetic: # if physics enabled on object
             x,y = speed*math.sin(self.rot[1]), speed*math.cos(self.rot[1])
             # by physics
             if key[pygame.K_SPACE] and self.grounded:
@@ -52,8 +52,7 @@ class Player:
             if key[pygame.K_s]: self.velocity[0]=x;  self.velocity[2]=y
             if key[pygame.K_a]: self.velocity[0]=-y; self.velocity[2]=x
             if key[pygame.K_d]: self.velocity[0]=y;  self.velocity[2]=-x
-        else:
-            print("moving")
+        else: # if physics disabled on object
             x,y = speed*math.sin(self.rot[1])*delta, speed*math.cos(self.rot[1])*delta
             # by position
             if key[pygame.K_SPACE] and self.grounded:
@@ -67,7 +66,7 @@ class Player:
 
         """
 
-            MOVE CAMERA by player
+            MOVE CAMERA from Player
 
         """
 
@@ -75,7 +74,9 @@ class Player:
 
         """
 
-            ROTATE PLAYER by camera
+            ROTATE PLAYER from Renderer
+	    
+	    should be changed to when camera rotated enough, and relative rotation is far enough, then rotate player
 
         """
 
@@ -143,4 +144,4 @@ while(run):
     if fpsInterval>=1:
         #print("disp")
         fpsInterval=0
-        pygame.display.set_caption("3dTriEngine | %.00f fps" % (clock.get_fps()))
+        pygame.display.set_caption("Game engine | %i fps" % int((clock.get_fps())))
