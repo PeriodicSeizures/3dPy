@@ -27,7 +27,7 @@ def get3dVert(vertex, originPos, originRot, targetPos):
     # WAS - FOR x,y,z
     # translate vert based on its position
     x = vertex[0]-originPos[0]+targetPos[0]
-    y = vertex[1]-originPos[1]+targetPos[1]
+    y = vertex[1]+originPos[1]+targetPos[1]
     z = vertex[2]-originPos[2]+targetPos[2]
 	
     """
@@ -51,12 +51,12 @@ def get2dVert(v,
     #return cx+int(v[0]/xr), cy+int(v[1]/yr)
     
     if v[2]!=0:
-      #print(v[2])
-      x = cx+int(v[0]/v[2]*projX)
-      y = cy+int(v[1]/v[2]*projY)
+        #print(v[2])
+        x = cx+int(v[0]/v[2]*projX)
+        y = cy+int(v[1]/v[2]*projY)
     else:
-      x = 10000
-      y = 10000
+        x = 10000
+        y = 10000
     
     return x, y
     
@@ -96,7 +96,7 @@ class Renderer:
 		
     def update(self, gameObjects): 
 	
-        self.rot[0] = math2d.clamp(self.rot[0], 0, pi) #.5*pi, 1.5*pi)
+        self.rot[0] = math2d.clamp(self.rot[0], -pi/2, pi/2) #.5*pi, 1.5*pi)
 	
         # Background color
         self.display.fill((255,255,255))

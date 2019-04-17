@@ -8,7 +8,7 @@ import copy
 
 class physics:
     def __init__(self):
-        self.gravity = -1
+        self.gravity = -3
         self.isActive = True
     
     
@@ -26,10 +26,10 @@ class physics:
     
     """
     
-    def fixedUpdate(self, delta):
+    def update(self, delta, objects):
         
         if self.isActive:
-            for o1 in gl.gameObjects:
+            for o1 in objects:
                 
 
 
@@ -60,11 +60,11 @@ class physics:
 
                     """
                     
-                    for o2 in gl.gameObjects:
+                    for o2 in objects:
                         if not o1 is o2:
                        
-                            for face in o2.faces:
-                                tri = copy.deepcopy(face["verts"])
+                            for face in o2.colliderFaces:
+                                tri = copy.deepcopy(face)
 
                                 """
                                 #print(tri)
@@ -155,9 +155,7 @@ class physics:
                 if o1.velocity[0]!=0:
                     o1.pos[0] += .5*(o1.velocity[0])*delta
                 if o1.velocity[1]!=0:
-                    #print("move")
                     o1.pos[1] += .5*(o1.velocity[1])*delta
-                    
                 if o1.velocity[2]!=0:
                     o1.pos[2] += .5*(o1.velocity[2])*delta
 

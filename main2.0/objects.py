@@ -41,12 +41,6 @@ class Object:
                 v.append(vert)
         return v
 
-    def getRawColliderFaces(self):
-        faces = []
-        for face in self.colliderFaces:
-            faces.append(face)
-        return faces
-
 
 objectList = {
 
@@ -66,7 +60,7 @@ objectList = {
                 ]
             },
             {
-                "color" : "0x00AAAA",
+                "color" : "0x009999",
                 "verts" : [			
                     [0,0,0],
                     [5,0,5],
