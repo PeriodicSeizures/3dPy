@@ -86,6 +86,18 @@ class physics:
                                 
                                 """
                                 #print(n)
+                                """
+
+                                calculate next position from velocity vector
+
+                                take position, and add velocity/4
+
+                                to imitate the quarter frame detection in sm640
+
+                                if math3d.pointInTri()
+
+                                """
+                                
                                 if n!=0:
                                     if o1.velocity[0]!=0:
                                         

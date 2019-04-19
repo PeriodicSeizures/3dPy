@@ -1,8 +1,6 @@
 import math
 import numpy as np
-
-
-
+import math2d
 
 """
 
@@ -56,12 +54,15 @@ def areaOfTri(vert1,vert2,vert3):
 	c = dist(vert3,vert1)
 	
 	s = (a+b+c)/2
-	
-	area = math.sqrt(
-	
-		s*(s-a)*(s-b)*(s-c)
-	
-	)
+
+	f = s*(s-a)*(s-b)*(s-c)
+
+	if math2d.isWithin(f, 0, .01) or f<0:
+            f = 0
+
+            #print("val formatted")
+            
+	area = math.sqrt(f)
 	
 	return area
 
@@ -69,24 +70,47 @@ def areaOfTri(vert1,vert2,vert3):
 def pointInTri(x1,y1,z1,    # P
                x2,y2,z2,    # A
                x3,y3,z3,    # B
-               x4,y4,z4):   # C
+               x4,y4,z4,
+               precision):   # C
 
     ABC = areaOfTri([x2,y2,z2],[x3,y3,z3],[x4,y4,z4])
     APB = areaOfTri([x2,y2,z2],[x1,y1,z1],[x3,y3,z3])
     APC = areaOfTri([x2,y2,z2],[x1,y1,z1],[x4,y4,z4])
     BPC = areaOfTri([x3,y3,z3],[x1,y1,z1],[x4,y4,z4])
 
-    sum = round(APB+APC+BPC,1) # precise up to 5 digits
-    ABC = round(ABC,1)
+    prec = {'low' : 0, 'low_med' : 1, 'med' : 2, 'med_high' : 3, 'high' : 4}
 
+    sum = APB+APC+BPC # precise up to 5 digits
+    ABC = ABC
+
+    #print("%.05f %.05f" % (sum, ABC))
+
+    if prec[precision]==0 and abs(sum-ABC) <= 3:
+        #sum = int(sum)
+        #ABC = int(ABC)
+        return True
+
+    elif prec[precision] == 1 and abs(sum-ABC) <= 1.5:
+        #sum = round(sum,prec[precision]) # precise up to 5 digits
+        #ABC = round(ABC,prec[precision])
+        return True
+
+    elif prec[precision] == 2 and abs(sum-ABC)<=.75:
+        return True
+
+    elif prec[precision] == 3 and abs(sum-ABC)<=.25:
+        return True
+
+    elif prec[precision] == 4 and abs(sum-ABC)<=.1:
+        return True    
+
+    return False
+
+    """
     if sum == ABC:
         return True
     return False
-    
-
-#def lineXTri(line, vert1, vert2, vert3):
-#    if 
-
+    """
 
 def normalize(vector):
     if vector[0]==0 and vector[1]==0 and vector[2]==0:

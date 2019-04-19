@@ -14,6 +14,33 @@
     
  
 """
+import math
+
+class Vector3:
+    def __init__(x,y,z):
+        self.x=x; self.y=y; self.z=z
+
+    def normalized(self):
+        d = self.dist([0,0,0], [self.x,self.y.self.z])
+        
+        if d==0: return Vector3(0,0,0)
+        return Vector3(self.x/d, self.y/d, self.z/d)
+
+    def normalize(self):
+        d = self.dist([0,0,0], [self.x,self.y.self.z])
+        
+        if d==0: self.x=0; self.x=0; self.y=0
+        else: self.x/=d; self.y/=d; self.z/=d
+
+    def magnitude(self, vector):
+        return math.sqrt(
+            math.pow(self.x-vector.x, 2) +
+
+            math.pow(self.y-vector.y, 2) +
+
+            math.pow(self.z-vector.z, 2)
+        )
+    
 
 class Object:
     def __init__(self, name, o):
