@@ -6,9 +6,22 @@ import math3d
 import numpy as np
 import copy
 
+def objectCollide(obj1, obj2):
+    vector1 = obj1.velocity
+    vector2 = obj2.velocity
+
+    if math3d.normalize(vector1) > 0:
+        if math3d.pointInTri(x+n[0]/10, y, z,
+                         tri[0][0],tri[0][1],tri[0][2],
+                         tri[1][0],tri[1][1],tri[1][2],
+                         tri[2][0],tri[2][1],tri[2][2],
+                         "low_med"):
+            
+
+
 class physics:
     def __init__(self):
-        self.gravity = -3
+        self.gravity = -9.8
         self.isActive = True
     
     
@@ -65,27 +78,7 @@ class physics:
                        
                             for face in o2.colliderFaces:
                                 tri = copy.deepcopy(face)
-
-                                """
-                                #print(tri)
-                                for v in range(len(tri)):
-                                    tri[v][0] += o2.pos[0]
-                                    tri[v][1] += o2.pos[1]
-                                    tri[v][2] += o2.pos[2]
-                                """
-
-
                                 
-                                """
-                                
-                                    Lossy Collision detection
-                                    
-                                        loss of precision of area comparison in order to detect apprx. collision
-                                        
-                                            (A pt. will never be exactly in a plane)
-                                
-                                """
-                                #print(n)
                                 """
 
                                 calculate next position from velocity vector
@@ -97,14 +90,20 @@ class physics:
                                 if math3d.pointInTri()
 
                                 """
-                                
+##
+##                                if math3d.pointInTri(x+n[0]/10, y, z,
+##                                    tri[0][0],tri[0][1],tri[0][2],
+##                                    tri[1][0],tri[1][1],tri[1][2],
+##                                    tri[2][0],tri[2][1],tri[2][2]):
+##                                
                                 if n!=0:
                                     if o1.velocity[0]!=0:
                                         
                                         if math3d.pointInTri(x+n[0]/10, y, z,
                                                              tri[0][0],tri[0][1],tri[0][2],
                                                              tri[1][0],tri[1][1],tri[1][2],
-                                                             tri[2][0],tri[2][1],tri[2][2]):
+                                                             tri[2][0],tri[2][1],tri[2][2],
+                                                             "low_med"):
                                             
                                             o1.velocity[0] = math2d.clamp(o1.velocity[0], 0, -o1.velocity[0])
 
@@ -113,7 +112,8 @@ class physics:
                                         if math3d.pointInTri(x, y+n[0]/10, z,
                                                              tri[0][0],tri[0][1],tri[0][2],
                                                              tri[1][0],tri[1][1],tri[1][2],
-                                                             tri[2][0],tri[2][1],tri[2][2]):
+                                                             tri[2][0],tri[2][1],tri[2][2],
+                                                             "low_med"):
                                             # if velocity is downwards
                                             # when object is collided with,
                                             # then is on a surface; grounded
@@ -124,13 +124,16 @@ class physics:
                                                 o1.grounded = False
                                             
                                             o1.velocity[1] = math2d.clamp(o1.velocity[1], 0, -o1.velocity[1])
+                                            print(math2d.clamp(o1.velocity[1], 0, -o1.velocity[1]))
+                                            
 
                                         
                                     if o1.velocity[2]!=0:
                                         if math3d.pointInTri(x, y, z+n[0]/10,
                                                              tri[0][0],tri[0][1],tri[0][2],
                                                              tri[1][0],tri[1][1],tri[1][2],
-                                                             tri[2][0],tri[2][1],tri[2][2]):
+                                                             tri[2][0],tri[2][1],tri[2][2],
+                                                             "low_med"):
                                             
                                             o1.velocity[2] = math2d.clamp(o1.velocity[2], 0, -o1.velocity[2])
 
@@ -168,6 +171,7 @@ class physics:
                     o1.pos[0] += .5*(o1.velocity[0])*delta
                 if o1.velocity[1]!=0:
                     o1.pos[1] += .5*(o1.velocity[1])*delta
+                    #print(o1.velocity[1])
                 if o1.velocity[2]!=0:
                     o1.pos[2] += .5*(o1.velocity[2])*delta
 

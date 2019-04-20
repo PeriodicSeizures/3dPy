@@ -113,8 +113,8 @@ def pointInTri(x1,y1,z1,    # P
     """
 
 def normalize(vector):
-    if vector[0]==0 and vector[1]==0 and vector[2]==0:
-        return 0
+    if dist(vector,[0,0,0]) == 0:
+        return vector
     
     d = dist([0,0,0], vector)
     v = [vector[0]/d, vector[1]/d, vector[2]/d]
@@ -154,22 +154,3 @@ def uVectNorm(x1,y1,z1,    # P
     d = np.dot(cp, p3)
 
     print(a,b,c)
-
-"""
-print(uVectNorm(1,-1,1,
-                4,3,7,
-                0,0,0))
-"""
-"""
-print(uVectNorm(3,-1,2,
-                1,-1,-3,
-                4,-3,1))
-"""
-"""
-print(uVectNorm(1,2,3,
-                4,6,9,
-                12,11,9))
-"""
-print(uVectNorm(-1,0,-1,
-                0,0,1,
-                0,0,0))
