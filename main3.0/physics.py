@@ -6,22 +6,26 @@ import math3d
 import numpy as np
 import copy
 
-##def objectCollide(obj1, obj2):
-##    vector1 = obj1.velocity
-##    vector2 = obj2.velocity
-##
-##    if math3d.normalize(vector1) > 0:
-##        if math3d.pointInTri(x+n[0]/10, y, z,
-##                         tri[0][0],tri[0][1],tri[0][2],
-##                         tri[1][0],tri[1][1],tri[1][2],
-##                         tri[2][0],tri[2][1],tri[2][2],
-##                         "low_med"):
-##            
+def boxBollide(box1, box2):
+    if box1.w
+
+def objectRectCollide(obj1, obj2):
+    if obj1.box.
+    vector1 = obj1.velocity
+    vector2 = obj2.velocity
+
+    if math3d.normalize(vector1) > 0:
+        if math3d.pointInTri(x+n[0]/10, y, z,
+                         tri[0][0],tri[0][1],tri[0][2],
+                         tri[1][0],tri[1][1],tri[1][2],
+                         tri[2][0],tri[2][1],tri[2][2],
+                         "low_med"):
+            
 
 
 class physics:
     def __init__(self):
-        self.gravity = -9.8
+        self.gravity = -.1
         self.isActive = True
     
     
@@ -50,7 +54,7 @@ class physics:
 
 
                 if o1.isKinetic:
-                    n = math3d.normalize(o1.velocity)
+                    n = o1.velocity.normalized()
                     #print(n)
                     x = o1.pos[0]; y = o1.pos[1]; z = o1.pos[2]
 
@@ -124,7 +128,7 @@ class physics:
                                                 o1.grounded = False
                                             
                                             o1.velocity[1] = math2d.clamp(o1.velocity[1], 0, -o1.velocity[1])
-                                            print(math2d.clamp(o1.velocity[1], 0, -o1.velocity[1]))
+                                            print("ground")
                                             
 
                                         

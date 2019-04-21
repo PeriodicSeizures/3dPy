@@ -8,7 +8,7 @@ import vector
 
 class Player:
     def __init__(self):
-        self.pos = vector.Vector3(0,1,0)
+        self.pos = vector.Vector3(1,1,1)
         
         self.rot = vector.Vector2()
 
@@ -16,7 +16,7 @@ class Player:
         self.colliderFaces = []
         
         self.isKinetic = True
-        self.velocity = [0,0,0]
+        self.velocity = vector.Vector3()
         self.useGravity = True
         self.grounded = False
 

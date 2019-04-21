@@ -254,9 +254,23 @@ def distance(vector_1, vector_2):
             ((vector_1.z-vector_2.z)**2)
         )
 
-"""
-v1 = Vector3(1,1,1)
-v1[1]-=5
 
-print(v1[1])
+"""
+def normalVector(x1,y1,z1,    # P
+                 x2,y2,z2,    # Q
+                 x3,y3,z3):   # R
+                 
+    p1 = np.array([x1,y1,z1])
+    p2 = np.array([x2,y2,z2])
+    p3 = np.array([x3,y3,z3])
+
+    v1 = p3-p1
+    v2 = p2-p1
+
+    cp = np.cross(v1,v2)
+    a,b,c = cp
+
+    d = np.dot(cp, p3)
+
+    print(a,b,c)
 """
