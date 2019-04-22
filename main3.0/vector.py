@@ -14,6 +14,16 @@ class Vector2:
         
         return Vector2(self.x/m, self.y/m)
 
+    def cross(self, b):
+        a = self
+        return Vector3(a.y*b.z - a.z*b.y,
+                       a.z*b.x - a.x*b.z,
+                       a.x*b.y - a.y*b.x)
+
+    def dot(self, b):
+        a = self
+        return a.x*b.x + a.y*b.y + a.z*b.z
+
     """--------------
 
         OVERLOADED

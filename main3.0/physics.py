@@ -3,29 +3,65 @@ import copy
 import gl
 import math2d
 import math3d
-import numpy as np
 import copy
 
-def boxBollide(box1, box2):
-    if box1.w
+def sign(n):
+    if n>0:
+        return 1
+    elif n<0:
+        return -1
+    return 0
 
-def objectRectCollide(obj1, obj2):
-    if obj1.box.
-    vector1 = obj1.velocity
-    vector2 = obj2.velocity
+def computeCollide(delta, obj1, obj2):
+    a = obj1.velocity
+    #b = obj2.velocity
 
-    if math3d.normalize(vector1) > 0:
-        if math3d.pointInTri(x+n[0]/10, y, z,
-                         tri[0][0],tri[0][1],tri[0][2],
-                         tri[1][0],tri[1][1],tri[1][2],
-                         tri[2][0],tri[2][1],tri[2][2],
-                         "low_med"):
+    n = a.normalized()
+    x,y,z = obj1.pos.x,obj1.pos.y,obj1.pos.z
+
+    if a.magnitude() > 0: # and obj2.isKinetic: # or b.magnitude > 0:
+        
+
+        for tri in obj2.colliderFaces:
+
+            #print(obj2.pos.x + "\n")
+            if math3d.pointInTri(x+sign(n[0])*.1, y, z,
+                             tri[0][0]+obj2.pos[0],tri[0][1]+obj2.pos[1],tri[0][2]+obj2.pos[2],
+                             tri[1][0]+obj2.pos[0],tri[1][1]+obj2.pos[1],tri[1][2]+obj2.pos[2],
+                             tri[2][0]+obj2.pos[0],tri[2][1]+obj2.pos[1],tri[2][2]+obj2.pos[2],
+                             "low_med"):
+                # set component to 0
+                obj1.pos[0] += -sign(a.x)*(delta/10)
+                
+                a.x = 0
+                
             
+            if math3d.pointInTri(x, y+sign(n[1])*.2, z,
+                             tri[0][0]+obj2.pos[0],tri[0][1]+obj2.pos[1],tri[0][2]+obj2.pos[2],
+                             tri[1][0]+obj2.pos[0],tri[1][1]+obj2.pos[1],tri[1][2]+obj2.pos[2],
+                             tri[2][0]+obj2.pos[0],tri[2][1]+obj2.pos[1],tri[2][2]+obj2.pos[2],
+                             "low_med"):
+                # set component to 0
+                obj1.pos[1] += -sign(a.y)*(delta/10)
+                a.y = 0
+                obj1.grounded = True
+                
+            else:
+                obj1.grounded = False
+
+            if math3d.pointInTri(x, y, z+sign(n[2])*.1,
+                             tri[0][0]+obj2.pos[0],tri[0][1]+obj2.pos[1],tri[0][2]+obj2.pos[2],
+                             tri[1][0]+obj2.pos[0],tri[1][1]+obj2.pos[1],tri[1][2]+obj2.pos[2],
+                             tri[2][0]+obj2.pos[0],tri[2][1]+obj2.pos[1],tri[2][2]+obj2.pos[2],
+                             "low_med"):
+                # set component to 0
+                obj1.pos[2] += -sign(a.z)*(delta/10)
+                a.z = 0
 
 
 class physics:
     def __init__(self):
-        self.gravity = -.1
+        self.gravity = -1
         self.isActive = True
     
     
@@ -54,11 +90,7 @@ class physics:
 
 
                 if o1.isKinetic:
-                    n = o1.velocity.normalized()
-                    #print(n)
-                    x = o1.pos[0]; y = o1.pos[1]; z = o1.pos[2]
-
-        
+                    
                     """
 
                             GRAVITY
@@ -79,89 +111,30 @@ class physics:
                     
                     for o2 in objects:
                         if not o1 is o2:
-                       
-                            for face in o2.colliderFaces:
-                                tri = copy.deepcopy(face)
-                                
-                                """
 
-                                calculate next position from velocity vector
+                            computeCollide(delta, o1,o2)
+                            
+                            """
 
-                                take position, and add velocity/4
+                                    FRICTION ON GROUND
+                                    
+                                        might or might not work currently
 
-                                to imitate the quarter frame detection in sm640
+                            """
 
-                                if math3d.pointInTri()
+                            if o1.grounded:
+                                cf = 10
+                                #print("Applying friction")
+                                if math2d.isWithin(o1.velocity[0], -.1,.1):
+                                    o1.velocity[0] = 0
+                                else:
+                                    o1.velocity[0] -= sign(o1.velocity[0])*delta*cf
 
-                                """
-##
-##                                if math3d.pointInTri(x+n[0]/10, y, z,
-##                                    tri[0][0],tri[0][1],tri[0][2],
-##                                    tri[1][0],tri[1][1],tri[1][2],
-##                                    tri[2][0],tri[2][1],tri[2][2]):
-##                                
-                                if n!=0:
-                                    if o1.velocity[0]!=0:
-                                        
-                                        if math3d.pointInTri(x+n[0]/10, y, z,
-                                                             tri[0][0],tri[0][1],tri[0][2],
-                                                             tri[1][0],tri[1][1],tri[1][2],
-                                                             tri[2][0],tri[2][1],tri[2][2],
-                                                             "low_med"):
-                                            
-                                            o1.velocity[0] = math2d.clamp(o1.velocity[0], 0, -o1.velocity[0])
-
-                                            
-                                    if o1.velocity[1]!=0:
-                                        if math3d.pointInTri(x, y+n[0]/10, z,
-                                                             tri[0][0],tri[0][1],tri[0][2],
-                                                             tri[1][0],tri[1][1],tri[1][2],
-                                                             tri[2][0],tri[2][1],tri[2][2],
-                                                             "low_med"):
-                                            # if velocity is downwards
-                                            # when object is collided with,
-                                            # then is on a surface; grounded
-                                            if n[1] < 0:
-                                                o1.grounded = True
-                                                #print("grounding")
-                                            else:
-                                                o1.grounded = False
-                                            
-                                            o1.velocity[1] = math2d.clamp(o1.velocity[1], 0, -o1.velocity[1])
-                                            print("ground")
-                                            
-
-                                        
-                                    if o1.velocity[2]!=0:
-                                        if math3d.pointInTri(x, y, z+n[0]/10,
-                                                             tri[0][0],tri[0][1],tri[0][2],
-                                                             tri[1][0],tri[1][1],tri[1][2],
-                                                             tri[2][0],tri[2][1],tri[2][2],
-                                                             "low_med"):
-                                            
-                                            o1.velocity[2] = math2d.clamp(o1.velocity[2], 0, -o1.velocity[2])
-
-                                    """
-
-                                            FRICTION ON GROUND
-                                            
-                                                might or might not work currently
-
-                                    """
-
-                                    """
-                                    if o1.grounded:
-                                        print("Applying friction")
-                                        if isWithin(o1.velocity[0], -.1,.1):
-                                            o1.velocity[0] = 0
-                                        else:
-                                            o1.velocity[0] -= np.sign(o1.velocity[0])*delta
-
-                                        if isWithin(o1.velocity[2], -.1,.1):
-                                            o1.velocity[2] = 0
-                                        else:
-                                            o1.velocity[2] -= np.sign(o1.velocity[2])*delta
-                                    """
+                                if math2d.isWithin(o1.velocity[2], -.1,.1):
+                                    o1.velocity[2] = 0
+                                else:
+                                    o1.velocity[2] -= sign(o1.velocity[2])*delta*cf
+                            
 
 
 

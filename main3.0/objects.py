@@ -15,7 +15,8 @@
  
 """
 import math
-
+import sys
+"""
 class Vector3:
     def __init__(x,y,z):
         self.x=x; self.y=y; self.z=z
@@ -41,7 +42,7 @@ class Vector3:
             math.pow(self.z-vector.z, 2)
         )
     
-
+"""
 class Object:
     def __init__(self, name, o):
         self.name = name
@@ -107,9 +108,101 @@ objectList = {
                 [5,0,0]
             ]
         ]
+    },
+
+    "cube" : {
+
+        "pos" : [8,0,8],
+        "isKinetic" : False,
+        "enableMesh" : True,
+        "enableCollider" : True,
+        "mesh" : [					# VISUAL
+            {
+                "color" : "0xAA0000",
+                "verts" : [			
+                    [0,0,0],
+                    [0,0,1],
+                    [1,0,1]
+                ]
+            },
+            {
+                "color" : "0x990000",
+                "verts" : [			
+                    [0,0,0],
+                    [1,0,1],
+                    [1,0,0]
+                ]
+            },
+            {
+                "color" : "0x880000",
+                "verts" : [			
+                    [0,0,0],
+                    [0,1,0],
+                    [1,1,0]
+                ]
+            },
+            {
+                "color" : "0x770000",
+                "verts" : [			
+                    [0,0,0],
+                    [1,0,0],
+                    [1,1,0]
+                ]
+            },
+            {
+                "color" : "0x880000",
+                "verts" : [			
+                    [0,0,0],
+                    [0,1,0],
+                    [0,1,1]
+                ]
+            },
+            {
+                "color" : "0x770000",
+                "verts" : [			
+                    [0,0,0],
+                    [0,0,1],
+                    [0,1,1]
+                ]
+            }
+        ],
+        "collider" : [				# PHYSICAL
+            [
+                [0,0,0],
+                [0,0,1],
+                [1,0,1]
+            ],
+            [
+                [0,0,0],
+                [1,0,1],
+                [1,0,0]
+            ],
+            [			
+                [0,0,0],
+                [0,1,0],
+                [1,1,0]
+            ],
+            [			
+                [0,0,0],
+                [1,0,0],
+                [1,1,0]
+            ],
+            [			
+                [0,0,0],
+                [0,1,0],
+                [0,1,1]
+            ],
+            [			
+                [0,0,0],
+                [0,0,1],
+                [0,1,1]
+            ]
+        ]
     }
 }
 
 objects = []
 for name, value in objectList.items():
     objects.append(Object(name, objectList[name])) 
+
+#print(sys.getsizeof(objects))

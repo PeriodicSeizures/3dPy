@@ -25,6 +25,7 @@ class Player:
 
     def update(self): #, delta):
         #key = pygame.key.get_pressed()
+        print(round(self.pos[1],5),self.velocity[1])
         self.move(pygame.key.get_pressed())
         """
         self.move(delta, pygame.key.get_pressed())
@@ -55,7 +56,7 @@ class Player:
             x,y = speed*math.sin(self.rot[1]), speed*math.cos(self.rot[1])
             # by physics
             if key[pygame.K_SPACE] and self.grounded:
-                self.velocity[1] = 3
+                self.velocity[1] = 1
                 self.grounded = False
                 
             if key[pygame.K_w]: self.velocity[0]=x;  self.velocity[2]=y

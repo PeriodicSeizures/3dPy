@@ -34,23 +34,31 @@ def lineXTriPlane(T, L): # If intersects infinite plane defined by tri
     return False
 """
 
+def dist(vert1,vert2):
+        return math.sqrt(
+                ((vert1[0]-vert2[0])**2)+
+                ((vert1[1]-vert2[1])**2)+
+                ((vert1[2]-vert2[2])**2)
+                )
+        
+
 def areaOfTri(vert1,vert2,vert3):
-	a = dist(vert1,vert2)
-	b = dist(vert2,vert3)
-	c = dist(vert3,vert1)
-	
-	s = (a+b+c)/2
+        a = dist(vert1,vert2)
+        b = dist(vert2,vert3)
+        c = dist(vert3,vert1)
 
-	f = s*(s-a)*(s-b)*(s-c)
+        s = (a+b+c)/2
 
-	if math2d.isWithin(f, 0, .01) or f<0:
+        f = s*(s-a)*(s-b)*(s-c)
+
+        if math2d.isWithin(f, 0, .01) or f<0:
             f = 0
 
             #print("val formatted")
             
-	area = math.sqrt(f)
-	
-	return area
+        area = math.sqrt(f)
+
+        return area
 
 
 def pointInTri(x1,y1,z1,    # P
