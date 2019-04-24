@@ -4,6 +4,7 @@ import math2d
 import os
 import objects as objs
 import vector
+import copy
 
 pi = math.pi
 
@@ -155,14 +156,33 @@ class Renderer:
 
             # depth buffer:
             #verts3d_s = []
-            #verts3d.sort(key=getZOrder, )
+            print(verts3d_faces[0])
+            s = []
+            totals = []
+            for face in verts3d_faces:
+                t = 0
+                for i in face:
+                    t += i[2]
+
+                t /= len(face)
+
+                totals.append(t)
+
+            for total in totals:
+                
+
+            # sort based on avg Z of face
+
+            
+                
+            #verts3d_faces.sort(key=getZOrder, reverse=True)
             #for vert in verts3d:
                 # sort so that less z is drawn last to get displayed
                 # closer to camera
                 
 
                 
-            
+            # convert
             for face in verts3d_faces:
                 if len(face)>=3:
                     verts2d=[]
