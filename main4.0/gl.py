@@ -156,6 +156,7 @@ class Renderer:
 
             # depth buffer:
             #verts3d_s = []
+            """
             print(verts3d_faces[0])
             s = []
             totals = []
@@ -169,6 +170,7 @@ class Renderer:
                 totals.append(t)
 
             for total in totals:
+            """
                 
 
             # sort based on avg Z of face
